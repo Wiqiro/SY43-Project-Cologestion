@@ -7,5 +7,6 @@ class User(
     var profilePicture: Int,
     var mail: String,
     var phone: String,
-    var Password: String
+    var password: String,
+    var spendings : List<Due>
 )
