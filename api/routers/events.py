@@ -20,7 +20,11 @@ def get_house_share_events(house_share_id: int, db: Session = Depends(get_db)):
 
 @router.post("", response_model=schemas.Event)
 def add_event(event: schemas.EventCreate, db: Session = Depends(get_db)):
-    return {}
+    new_event = models.Event(**event.model_dump())
+    db.add(new_event)
+    db.commit()
+    db.refresh(new_event)
+    return new_event
 
 
 @router.put("/{event_id}", response_model=schemas.Event)
@@ -32,4 +36,7 @@ def update_event(
 
 @router.delete("/{event_id}", response_model=schemas.Event)
 def delete_event(event_id: int, db: Session = Depends(get_db)):
-    return {}
+    event = db.query(models.Event).get(event_id)
+    db.delete(event)
+    db.commit()
+    return event

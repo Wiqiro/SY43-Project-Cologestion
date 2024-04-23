@@ -31,7 +31,11 @@ def get_user_house_shares(user_id: int, db: Session = Depends(get_db)):
 def add_house_share(
     house_share: schemas.HouseShareCreate, db: Session = Depends(get_db)
 ):
-    return {}
+    new_house_share = models.HouseShare(**house_share.model_dump())
+    db.add(new_house_share)
+    db.commit()
+    db.refresh(new_house_share)
+    return new_house_share
 
 
 @router.put("/{house_share_id}", response_model=schemas.HouseShare)
@@ -45,4 +49,7 @@ def update_house_share(
 
 @router.delete("/{house_share_id}", response_model=schemas.HouseShare)
 def delete_house_share(house_share_id: int, db: Session = Depends(get_db)):
-    return {}
+    house_share = db.query(models.HouseShare).get(house_share_id)
+    db.delete(house_share)
+    db.commit()
+    return house_share

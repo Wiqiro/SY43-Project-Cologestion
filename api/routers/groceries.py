@@ -29,14 +29,22 @@ def get_house_share_groceries(house_share_id: int, db: Session = Depends(get_db)
 
 @router.post("", response_model=schemas.GroceryList)
 def add_grocery(grocery_list: schemas.GroceryListCreate, db: Session = Depends(get_db)):
-    return {}
+    new_grocery = models.GroceryList(**grocery_list.model_dump())
+    db.add(new_grocery)
+    db.commit()
+    db.refresh(new_grocery)
+    return new_grocery
 
 
 @router.post("/item", response_model=schemas.GroceryItem)
 def add_grocery_item(
     grocery_item: schemas.GroceryItemCreate, db: Session = Depends(get_db)
 ):
-    return {}
+    new_grocery_item = models.GroceryItem(**grocery_item.model_dump())
+    db.add(new_grocery_item)
+    db.commit()
+    db.refresh(new_grocery_item)
+    return new_grocery_item
 
 
 @router.put("/{grocery_id}", response_model=schemas.GroceryList)
@@ -59,9 +67,15 @@ def update_grocery_item(
 
 @router.delete("/{grocery_id}", response_model=schemas.GroceryList)
 def delete_grocery(grocery_id: int, db: Session = Depends(get_db)):
-    return {}
+    grocery = db.query(models.GroceryList).get(grocery_id)
+    db.delete(grocery)
+    db.commit()
+    return grocery
 
 
 @router.delete("/item/{grocery_item_id}", response_model=schemas.GroceryItem)
 def delete_grocery_item(grocery_item_id: int, db: Session = Depends(get_db)):
-    return {}
+    grocery_item = db.query(models.GroceryItem).get(grocery_item_id)
+    db.delete(grocery_item)
+    db.commit()
+    return grocery_item
