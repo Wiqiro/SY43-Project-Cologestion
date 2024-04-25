@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List
 
 from pydantic import BaseModel
 
@@ -14,6 +14,7 @@ class HouseShareCreate(HouseShareBase):
 
 class HouseShare(HouseShareBase):
     id: int
+    creation_date: int
     users: List["UserBase"]
 
     class Config:
@@ -35,7 +36,6 @@ class User(UserBase):
     id: int
     profile_picture: str
     house_shares: List[HouseShareBase]
-    tasks: List["TaskBase"]
 
     class Config:
         from_attributes = True
@@ -100,10 +100,10 @@ class GroceryItemBase(BaseModel):
     name: str
     quantity: int
     bought: bool
-    list_id: int
 
 
 class GroceryItemCreate(GroceryItemBase):
+    list_id: int
     pass
 
 

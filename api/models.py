@@ -1,5 +1,5 @@
 from database import Base
-from sqlalchemy import BigInteger, Boolean, Column, Enum, ForeignKey, Integer, String
+from sqlalchemy import Boolean, Column, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship
 
 
@@ -83,6 +83,8 @@ class GroceryItem(Base):
     quantity = Column(String(100), nullable=False)
     bought = Column(Boolean, nullable=False, default=False)
     list_id = Column(Integer, ForeignKey("grocery_list.id"), nullable=False)
+
+    list = relationship("GroceryList", back_populates="items")
 
 
 class User(Base):
