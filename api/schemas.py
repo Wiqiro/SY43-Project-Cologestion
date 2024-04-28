@@ -41,6 +41,11 @@ class User(UserBase):
         from_attributes = True
 
 
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+
 class TaskBase(BaseModel):
     name: str
     deadline: int

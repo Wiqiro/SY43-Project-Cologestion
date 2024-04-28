@@ -8,12 +8,17 @@ from database import get_db
 from fastapi import APIRouter, Depends, HTTPException
 from requests import Session
 from sqlalchemy.orm.exc import NoResultFound
+from utils import get_current_user
 
 router = APIRouter(prefix="/house_shares", tags=["House Shares"])
 
 
 @router.get("/{house_share_id}", response_model=schemas.HouseShare)
-def get_house_share(house_share_id: int, db: Session = Depends(get_db)):
+def get_house_share(
+    house_share_id: int,
+    db: Session = Depends(get_db),
+    current_user_id: str = Depends(get_current_user),
+):
     try:
         return db.query(models.HouseShare).get(house_share_id)
     except NoResultFound:
@@ -23,7 +28,11 @@ def get_house_share(house_share_id: int, db: Session = Depends(get_db)):
 
 
 @router.get("/user/{user_id}", response_model=List[schemas.HouseShare])
-def get_user_house_shares(user_id: int, db: Session = Depends(get_db)):
+def get_user_house_shares(
+    user_id: int,
+    db: Session = Depends(get_db),
+    current_user_id: str = Depends(get_current_user),
+):
     try:
         return (
             db.query(models.HouseShare)
@@ -42,7 +51,9 @@ def get_user_house_shares(user_id: int, db: Session = Depends(get_db)):
 
 @router.post("", response_model=schemas.HouseShare)
 def add_house_share(
-    house_share: schemas.HouseShareCreate, db: Session = Depends(get_db)
+    house_share: schemas.HouseShareCreate,
+    db: Session = Depends(get_db),
+    current_user_id: str = Depends(get_current_user),
 ):
     try:
         new_house_share = models.HouseShare(**house_share.model_dump())
@@ -60,6 +71,7 @@ def update_house_share(
     house_share_id: int,
     house_share: schemas.HouseShareCreate,
     db: Session = Depends(get_db),
+    current_user_id: str = Depends(get_current_user),
 ):
     try:
         new_house_share = house_share.model_dump()
@@ -77,7 +89,11 @@ def update_house_share(
 
 
 @router.delete("/{house_share_id}", response_model=schemas.HouseShare)
-def delete_house_share(house_share_id: int, db: Session = Depends(get_db)):
+def delete_house_share(
+    house_share_id: int,
+    db: Session = Depends(get_db),
+    current_user_id: str = Depends(get_current_user),
+):
     try:
         house_share = db.query(models.HouseShare).get(house_share_id)
         db.delete(house_share)

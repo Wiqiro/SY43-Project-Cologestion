@@ -6,12 +6,17 @@ from database import get_db
 from fastapi import APIRouter, Depends, HTTPException
 from requests import Session
 from sqlalchemy.orm.exc import NoResultFound
+from utils import get_current_user
 
 router = APIRouter(prefix="/events", tags=["Events"])
 
 
 @router.get("/house_share/{house_share_id}", response_model=List[schemas.Event])
-def get_house_share_events(house_share_id: int, db: Session = Depends(get_db)):
+def get_house_share_events(
+    house_share_id: int,
+    db: Session = Depends(get_db),
+    current_user_id: str = Depends(get_current_user),
+):
     try:
         return (
             db.query(models.Event)
@@ -25,7 +30,11 @@ def get_house_share_events(house_share_id: int, db: Session = Depends(get_db)):
 
 
 @router.post("", response_model=schemas.Event)
-def add_event(event: schemas.EventCreate, db: Session = Depends(get_db)):
+def add_event(
+    event: schemas.EventCreate,
+    db: Session = Depends(get_db),
+    current_user_id: str = Depends(get_current_user),
+):
     try:
         new_event = models.Event(**event.model_dump())
         db.add(new_event)
@@ -38,7 +47,10 @@ def add_event(event: schemas.EventCreate, db: Session = Depends(get_db)):
 
 @router.put("/{event_id}", response_model=schemas.Event)
 def update_event(
-    event_id: int, event: schemas.EventCreate, db: Session = Depends(get_db)
+    event_id: int,
+    event: schemas.EventCreate,
+    db: Session = Depends(get_db),
+    current_user_id: str = Depends(get_current_user),
 ):
     try:
         new_event = event.model_dump()
@@ -52,7 +64,11 @@ def update_event(
 
 
 @router.delete("/{event_id}", response_model=schemas.Event)
-def delete_event(event_id: int, db: Session = Depends(get_db)):
+def delete_event(
+    event_id: int,
+    db: Session = Depends(get_db),
+    current_user_id: str = Depends(get_current_user),
+):
     try:
         event = db.query(models.Event).get(event_id)
         db.delete(event)
