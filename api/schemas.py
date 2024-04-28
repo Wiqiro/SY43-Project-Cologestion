@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Optional
 
 from pydantic import BaseModel, field_validator
 
@@ -34,7 +34,7 @@ class UserCreate(UserBase):
 
 class User(UserBase):
     id: int
-    profile_picture: str
+    profile_picture: Optional[str]
     house_shares: List[HouseShareBase]
 
     class Config:

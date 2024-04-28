@@ -96,7 +96,7 @@ class User(Base):
     profile_picture = Column(String(100))
     email = Column(String(100), unique=True, nullable=False)
     phone = Column(String(14), nullable=False)
-    password_hash = Column(String(100))
+    password_hash = Column(String(100), nullable=False)
 
     creditor_dues = relationship(
         "Due", back_populates="creditor", foreign_keys=[Due.creditor_id]

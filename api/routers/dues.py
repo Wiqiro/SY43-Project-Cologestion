@@ -6,12 +6,15 @@ from database import get_db
 from fastapi import APIRouter, Depends, HTTPException
 from requests import Session
 from sqlalchemy.orm.exc import NoResultFound
+from utils import oauth2_scheme
 
 router = APIRouter(prefix="/dues", tags=["Dues"])
 
 
 @router.get("/user/{user_id}", response_model=List[schemas.Due])
-def get_user_dues(user_id: int, db: Session = Depends(get_db)):
+def get_user_dues(
+    user_id: int, db: Session = Depends(get_db), token: str = Depends(oauth2_scheme)
+):
     try:
         return (
             db.query(models.Due)

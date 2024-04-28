@@ -6,6 +6,7 @@ from database import get_db
 from fastapi import APIRouter, Depends, HTTPException
 from requests import Session
 from sqlalchemy.orm.exc import NoResultFound
+from utils import get_password_hash
 
 router = APIRouter(prefix="/users", tags=["Users"])
 
@@ -34,5 +35,19 @@ def get_house_share_users(house_share_id: int, db: Session = Depends(get_db)):
         )
     except NoResultFound:
         raise HTTPException(status_code=404, detail="House share not found")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("", response_model=schemas.User)
+def add_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
+    try:
+        user_dict = user.model_dump()
+        password_hash = get_password_hash(user_dict.pop("password"))
+        new_user = models.User(**user_dict, password_hash=password_hash)
+        db.add(new_user)
+        db.commit()
+        db.refresh(new_user)
+        return new_user
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
