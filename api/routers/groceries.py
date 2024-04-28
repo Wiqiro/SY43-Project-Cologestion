@@ -70,7 +70,17 @@ def update_grocery(
     grocery_list: schemas.GroceryListCreate,
     db: Session = Depends(get_db),
 ):
-    return {}
+    try:
+        new_grocery = grocery_list.model_dump()
+        updated_rows = (
+            db.query(models.GroceryList).filter_by(id=grocery_id).update(new_grocery)
+        )
+        db.commit()
+        if updated_rows == 0:
+            raise HTTPException(status_code=404, detail="Grocery list not found")
+        return db.query(models.GroceryList).get(grocery_id)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 @router.put("/item/{grocery_item_id}", response_model=schemas.GroceryItem)
@@ -79,7 +89,19 @@ def update_grocery_item(
     grocery_item: schemas.GroceryItemCreate,
     db: Session = Depends(get_db),
 ):
-    return {}
+    try:
+        new_grocery_item = grocery_item.model_dump()
+        updated_rows = (
+            db.query(models.GroceryItem)
+            .filter_by(id=grocery_item_id)
+            .update(new_grocery_item)
+        )
+        db.commit()
+        if updated_rows == 0:
+            raise HTTPException(status_code=404, detail="Grocery item not found")
+        return db.query(models.GroceryItem).get(grocery_item_id)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 @router.delete("/{grocery_id}", response_model=schemas.GroceryList)

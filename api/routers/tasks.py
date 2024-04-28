@@ -48,7 +48,15 @@ def add_task(task: schemas.TaskCreate, db: Session = Depends(get_db)):
 
 @router.put("/{task_id}", response_model=schemas.Task)
 def update_task(task_id: int, task: schemas.TaskCreate, db: Session = Depends(get_db)):
-    return {}
+    try:
+        new_task = task.model_dump()
+        updated_rows = db.query(models.Task).filter_by(id=task_id).update(new_task)
+        db.commit()
+        if updated_rows == 0:
+            raise HTTPException(status_code=404, detail="Task not found")
+        return db.query(models.Task).get(task_id)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 @router.delete("/{task_id}", response_model=schemas.Task)

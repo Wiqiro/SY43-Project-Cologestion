@@ -61,7 +61,19 @@ def update_house_share(
     house_share: schemas.HouseShareCreate,
     db: Session = Depends(get_db),
 ):
-    return {}
+    try:
+        new_house_share = house_share.model_dump()
+        updated_rows = (
+            db.query(models.HouseShare)
+            .filter_by(id=house_share_id)
+            .update(new_house_share)
+        )
+        db.commit()
+        if updated_rows == 0:
+            raise HTTPException(status_code=404, detail="House share not found")
+        return db.query(models.HouseShare).get(house_share_id)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 @router.delete("/{house_share_id}", response_model=schemas.HouseShare)

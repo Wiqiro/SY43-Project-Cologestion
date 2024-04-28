@@ -40,7 +40,15 @@ def add_event(event: schemas.EventCreate, db: Session = Depends(get_db)):
 def update_event(
     event_id: int, event: schemas.EventCreate, db: Session = Depends(get_db)
 ):
-    return {}
+    try:
+        new_event = event.model_dump()
+        updated_rows = db.query(models.Event).filter_by(id=event_id).update(new_event)
+        db.commit()
+        if updated_rows == 0:
+            raise HTTPException(status_code=404, detail="Event not found")
+        return db.query(models.Event).get(event_id)
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
 
 
 @router.delete("/{event_id}", response_model=schemas.Event)
