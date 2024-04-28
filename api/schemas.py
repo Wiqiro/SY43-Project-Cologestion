@@ -1,6 +1,6 @@
 from typing import List, Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator
 
 
 class HouseShareBase(BaseModel):
@@ -14,6 +14,7 @@ class HouseShareCreate(HouseShareBase):
 
 class HouseShare(HouseShareBase):
     id: int
+    creation_date: int
     users: List["UserBase"]
 
     class Config:
@@ -33,12 +34,16 @@ class UserCreate(UserBase):
 
 class User(UserBase):
     id: int
-    profile_picture: str
+    profile_picture: Optional[str]
     house_shares: List[HouseShareBase]
-    tasks: List["TaskBase"]
 
     class Config:
         from_attributes = True
+
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
 
 
 class TaskBase(BaseModel):
@@ -46,3 +51,84 @@ class TaskBase(BaseModel):
     deadline: int
     done: bool
     assignee_id: int
+    house_share_id: int
+
+
+class TaskCreate(TaskBase):
+    pass
+
+
+class Task(TaskBase):
+    id: int
+
+    class Config:
+        from_attributes = True
+
+
+class DueBase(BaseModel):
+    amount: float
+    creditor_id: int
+    debtor_id: int
+    house_share_id: int
+
+
+class DueCreate(DueBase):
+    pass
+
+
+class Due(DueBase):
+    id: int
+
+    class Config:
+        from_attributes = True
+
+
+class EventBase(BaseModel):
+    title: str
+    date: int
+    duration: int
+    house_share_id: int
+
+
+class EventCreate(EventBase):
+    pass
+
+
+class Event(EventBase):
+    id: int
+
+    class Config:
+        from_attributes = True
+
+
+class GroceryItemBase(BaseModel):
+    name: str
+    quantity: int
+    bought: bool
+
+
+class GroceryItemCreate(GroceryItemBase):
+    list_id: int
+    pass
+
+
+class GroceryItem(GroceryItemBase):
+    id: int
+
+
+class GroceryListBase(BaseModel):
+    name: str
+    house_share_id: int
+    assignee_id: int
+
+
+class GroceryListCreate(GroceryListBase):
+    pass
+
+
+class GroceryList(GroceryListBase):
+    id: int
+    items: List[GroceryItem]
+
+    class Config:
+        from_attributes = True
