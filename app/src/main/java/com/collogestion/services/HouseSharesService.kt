@@ -16,4 +16,35 @@ object HouseSharesService {
             completion(houseShares)
         }
     }
+
+    fun addHouseShare(name: String, imageUrl: String, completion: (HouseShare) -> Unit) {
+        val body = mapOf(
+            "name" to name,
+            "image" to imageUrl
+        )
+
+        HttpClient.postRequest("/house_shares", body) { response ->
+            val houseShare = HttpClient.gson.fromJson(response, HouseShare::class.java)
+            completion(houseShare)
+        }
+    }
+
+    fun editHouseShare(houseShareId: Int, name: String, imageUrl: String, completion: (HouseShare) -> Unit) {
+        val body = mapOf(
+            "name" to name,
+            "image" to imageUrl
+        )
+
+        HttpClient.putRequest("/house_shares/$houseShareId", body) { response ->
+            val houseShare = HttpClient.gson.fromJson(response, HouseShare::class.java)
+            completion(houseShare)
+        }
+    }
+
+    fun deleteHouseShare(houseShareId: Int, completion: (HouseShare) -> Unit) {
+        HttpClient.deleteRequest("/house_shares/$houseShareId") { response ->
+            val houseShare = HttpClient.gson.fromJson(response, HouseShare::class.java)
+            completion(houseShare)
+        }
+    }
 }

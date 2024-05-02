@@ -16,4 +16,19 @@ object UsersService {
             completion(users)
         }
     }
+
+    fun addUser(firstname: String, lastname: String, email: String, phone: String, password: String, completion: (User) -> Unit) {
+        val body = mapOf(
+            "first_name" to firstname,
+            "last_name" to lastname,
+            "email" to email,
+            "phone" to phone,
+            "password" to password
+        )
+
+        HttpClient.postRequest("/users", body) { response ->
+            val user = HttpClient.gson.fromJson(response, User::class.java)
+            completion(user)
+        }
+    }
 }
