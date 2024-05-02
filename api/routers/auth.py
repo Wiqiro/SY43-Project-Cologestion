@@ -18,7 +18,6 @@ def login(
         user = db.query(models.User).filter_by(email=form_data.username).one()
         if not verify_password(form_data.password, user.password_hash):
             raise HTTPException(status_code=401, detail="Incorrect password")
-        print(create_token(user))
         token = create_token(user)
         return schemas.Token(access_token=token, token_type="bearer")
     except NoResultFound:
@@ -26,5 +25,4 @@ def login(
     except HTTPException:
         raise
     except Exception as e:
-        print(e)
         raise HTTPException(status_code=500, detail=str(e))

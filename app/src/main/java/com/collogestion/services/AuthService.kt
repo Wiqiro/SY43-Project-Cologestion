@@ -24,6 +24,7 @@ object AuthService {
     }
 
     fun login(email: String, password: String, callback: (String?) -> Unit) {
+
         HttpClient.postRequest(
             "/auth/token", FormBody.Builder()
                 .add("username", email)

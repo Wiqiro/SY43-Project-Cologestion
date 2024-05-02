@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.collogestion.services.AuthService
+import com.collogestion.services.DuesService
 import com.collogestion.services.HttpClient
 import com.collogestion.services.UsersService
 import com.collogestion.ui.theme.ColloGestionTheme
@@ -41,8 +42,11 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 
     Column {
         Button(onClick = {
-            UsersService.getUser(1) { user ->
+            /*UsersService.getUser(1) { user ->
                 Log.d("User", "${user.firstname} ${user.lastname} ${user.mail} ${user.phone} ${user.profilePicture}")
+            }*/
+            DuesService.addDue(10.0, 1, 2, 1) { due ->
+                Log.d("Due", "${due.amount} ${due.creditorId} ${due.debtorId} ${due.houseShareId}")
             }
         }) {
             Text(text = "Query")

@@ -6,14 +6,16 @@ import com.google.gson.Gson
 import okhttp3.Call
 import okhttp3.Callback
 import okhttp3.FormBody
+import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.RequestBody
+import okhttp3.RequestBody.Companion.toRequestBody
 import okhttp3.Response
 import java.io.IOException
 
 object HttpClient {
-    const val BASE_URL = "http://10.0.2.2:8000"
+    private const val BASE_URL = "http://10.0.2.2:8000"
 
     private val client = OkHttpClient()
     val gson = Gson()
@@ -31,9 +33,17 @@ object HttpClient {
         executeRequest(request, callback)
     }
 
-    fun putRequest(url: String, requestBody: RequestBody?, callback: (String?) -> Unit) {
-        val request =
-            createRequestBuilder(url).put(requestBody ?: FormBody.Builder().build()).build()
+    fun postRequest(url: String, requestBody: Map<String, Any>?, callback: (String?) -> Unit) {
+        val json = gson.toJson(requestBody)
+        val body = json.toRequestBody("application/json; charset=utf-8".toMediaType())
+        val request = createRequestBuilder(url).post(body).build()
+        executeRequest(request, callback)
+    }
+
+    fun putRequest(url: String, requestBody: Map<String, Any>?, callback: (String?) -> Unit) {
+        val json = gson.toJson(requestBody)
+        val body = json.toRequestBody("application/json; charset=utf-8".toMediaType())
+        val request = createRequestBuilder(url).put(body).build()
         executeRequest(request, callback)
     }
 
