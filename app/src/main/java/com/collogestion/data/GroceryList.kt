@@ -1,8 +1,11 @@
 package com.collogestion.data
 
+import com.google.gson.annotations.SerializedName
+
 class GroceryList (
-    var name : String,
-    var assignees : List<User>,
-    var items : List<GroceryListItem>
+    @SerializedName("id") var id : Int,
+    @SerializedName("name") var name : String,
+    @SerializedName("assignee_id") var assignee_id : Int,
+    @SerializedName("items") var items : List<GroceryListItem>
     )
 

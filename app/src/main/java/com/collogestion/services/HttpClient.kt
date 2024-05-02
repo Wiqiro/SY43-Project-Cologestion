@@ -13,6 +13,7 @@ import okhttp3.Response
 import java.io.IOException
 
 object HttpClient {
+    const val BASE_URL = "http://10.0.2.2:8000"
 
     private val client = OkHttpClient()
     val gson = Gson()
@@ -42,7 +43,7 @@ object HttpClient {
     }
 
     private fun createRequestBuilder(url: String): Request.Builder {
-        val builder = Request.Builder().url(url)
+        val builder = Request.Builder().url(BASE_URL + url)
         token?.let { token ->
             builder.addHeader("Authorization", "Bearer $token")
         }
@@ -70,6 +71,4 @@ object HttpClient {
             }
         })
     }
-
-
 }

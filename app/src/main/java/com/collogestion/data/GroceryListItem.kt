@@ -1,7 +1,10 @@
 package com.collogestion.data
 
+import com.google.gson.annotations.SerializedName
+
 class GroceryListItem (
-    var name : String,
-    var bought : Boolean,
-    var quantity : Int
+    @SerializedName("id") var id : Int,
+    @SerializedName("name") var name : String,
+    @SerializedName("bought") var bought : Boolean,
+    @SerializedName("quantity") var quantity : Int
 )

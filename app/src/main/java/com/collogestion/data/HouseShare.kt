@@ -1,14 +1,15 @@
 package com.collogestion.data
 
+import com.google.gson.annotations.SerializedName
 import java.util.Date
 
 class HouseShare (
-    var id : Int,
-    var name : String,
-    var image : Int,
-    var creationDate : Date,
-    var tasks : List<Task>,
-    var groceryLists : List<GroceryList>,
-    var users : List<User>
+    @SerializedName("id") var id : Int,
+    @SerializedName("name") var name : String,
+    @SerializedName("image") var image : String,
+    @SerializedName("creation_date") var creationDate : Date,
+    @SerializedName("id") var tasks : List<Task>,
+    @SerializedName("id") var groceryLists : List<GroceryList>,
+    @SerializedName("id") var users : List<User>
 )
 

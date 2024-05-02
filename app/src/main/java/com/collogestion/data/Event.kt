@@ -1,9 +1,12 @@
 package com.collogestion.data
 
+import com.google.gson.annotations.SerializedName
 import java.util.Date
 
 class Event(
-    var date : Date,
-    var title : String,
-    var duration : Int
+    @SerializedName("id") var id : Int,
+    @SerializedName("date") var date : Date,
+    @SerializedName("title") var title : String,
+    @SerializedName("duration") var duration : Int,
+    @SerializedName("house_share_id") var houseShareId : Int
 )

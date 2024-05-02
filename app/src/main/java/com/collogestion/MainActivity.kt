@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import com.collogestion.services.AuthService
 import com.collogestion.services.HttpClient
+import com.collogestion.services.UsersService
 import com.collogestion.ui.theme.ColloGestionTheme
 
 
@@ -40,9 +41,8 @@ fun Greeting(name: String, modifier: Modifier = Modifier) {
 
     Column {
         Button(onClick = {
-            val url = "http://10.0.2.2:8000/dues/user/1"
-            HttpClient.getRequest(url) { response ->
-                Log.d("MainActivity", "Response: $response")
+            UsersService.getUser(1) { user ->
+                Log.d("User", "${user.firstname} ${user.lastname} ${user.mail} ${user.phone} ${user.profilePicture}")
             }
         }) {
             Text(text = "Query")
