@@ -11,4 +11,3 @@ class HouseShare (
     var groceryLists : List<GroceryList>,
     var users : List<User>
 )
-

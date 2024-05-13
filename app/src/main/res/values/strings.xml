@@ -1,3 +1,22 @@
 <resources>
     <string name="app_name">ColloGestion</string>
+    <string name="project_page_title">Projects</string>
+    <string name="project_nav_bar_title">Home</string>
+    <string name="personal_task_page_title">Personal Task</string>
+    <string name="personal_task_nav_bar_title">Personal</string>
+    <string name="profile_page_title">Profile</string>
+    <string name="profile_nav_bar_title">Profile</string>
+    <string name="number_of_project">Number of project(s) : </string>
+    <string name="total_spending">Total spending : </string>
+    <string name="number_of_realised_task">Number of realised task(s) : </string>
+    <string name="theme">App Theme</string>
+    <string name="notifications">Notifications</string>
+    <string name="email">Email</string>
+    <string name="phone">Phone</string>
+    <string name="dark">Dark</string>
+    <string name="light">Light</string>
+    <string name="activated">Activated</string>
+    <string name="deactivated">Deactivated</string>
+    <string name="email_placeholder">email@example.com</string>
+    <string name="phone_placeholder">07 28 94 94 36</string>
 </resources>
