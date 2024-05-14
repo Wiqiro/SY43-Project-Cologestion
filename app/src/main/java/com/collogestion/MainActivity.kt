@@ -1,6 +1,7 @@
 package com.collogestion
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
@@ -27,14 +28,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.collogestion.services.AuthService
 import com.collogestion.ui.theme.ColloGestionTheme
-
 
 
 class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        AuthService.initialize(this)
+        AuthService.login("string@email.com", "string") {}
         setContent {
             ColloGestionTheme {
                 Surface(
@@ -43,14 +46,38 @@ class MainActivity : ComponentActivity() {
                     var selectedItem by remember { mutableIntStateOf(0) }
                     Scaffold(
                         bottomBar = {
-                            NavigationBar(containerColor = Color.DarkGray
+                            NavigationBar(
+                                containerColor = Color.DarkGray
                             ) {
-                                val outlinedIconsList = listOf(Icons.Outlined.Home, Icons.Outlined.List, Icons.Outlined.AccountCircle)
-                                val items = listOf(resources.getString(R.string.project_nav_bar_title), resources.getString(R.string.personal_task_nav_bar_title), resources.getString(R.string.profile_nav_bar_title))
+                                val outlinedIconsList = listOf(
+                                    Icons.Outlined.Home,
+                                    Icons.Outlined.List,
+                                    Icons.Outlined.AccountCircle
+                                )
+                                val items = listOf(
+                                    resources.getString(R.string.project_nav_bar_title),
+                                    resources.getString(R.string.personal_task_nav_bar_title),
+                                    resources.getString(R.string.profile_nav_bar_title)
+                                )
                                 items.forEachIndexed { index, item ->
                                     NavigationBarItem(
-                                        icon = { Icon(outlinedIconsList[index], contentDescription = item, tint = Color.White, modifier = Modifier.size(25.dp)) },
-                                        label = { Text(item, style = TextStyle(color = Color.White, fontSize = 15.sp)) },
+                                        icon = {
+                                            Icon(
+                                                outlinedIconsList[index],
+                                                contentDescription = item,
+                                                tint = Color.White,
+                                                modifier = Modifier.size(25.dp)
+                                            )
+                                        },
+                                        label = {
+                                            Text(
+                                                item,
+                                                style = TextStyle(
+                                                    color = Color.White,
+                                                    fontSize = 15.sp
+                                                )
+                                            )
+                                        },
                                         selected = selectedItem == index,
                                         onClick = { selectedItem = index }
                                     )
@@ -65,7 +92,11 @@ class MainActivity : ComponentActivity() {
                         ) {
                             when (selectedItem) {
                                 0 -> Dashboard(0, resources.getString(R.string.project_page_title))
-                                1 -> Dashboard(1, resources.getString(R.string.personal_task_page_title))
+                                1 -> Dashboard(
+                                    1,
+                                    resources.getString(R.string.personal_task_page_title)
+                                )
+
                                 2 -> Dashboard(2, resources.getString(R.string.profile_page_title))
                             }
                         }

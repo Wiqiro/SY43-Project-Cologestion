@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -31,29 +32,28 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.collogestion.services.HouseSharesService
 
 
 @Composable
 fun Card(houseShare: HouseShare, onCardClick: () -> Unit) {
-    Column(
-        Modifier
+    Column(Modifier
 //            .border(border = BorderStroke(width = 1.dp, color = Color.Red), shape = RoundedCornerShape(30.0.dp))
-            .width((LocalConfiguration.current.screenWidthDp * 0.85).dp)
-            .height((LocalConfiguration.current.screenWidthDp * 0.5).dp)
-            .clip(shape = RoundedCornerShape(10.dp))
-            .clickable { onCardClick() }
-            .background(color = Color(0xFF211F26)),
+        .width((LocalConfiguration.current.screenWidthDp * 0.85).dp)
+        .height((LocalConfiguration.current.screenWidthDp * 0.5).dp)
+        .clip(shape = RoundedCornerShape(10.dp))
+        .clickable { onCardClick() }
+        .background(color = Color(0xFF211F26)),
 //            .padding(10.dp),
 //            .border(shape = RoundedCornerShape(5.dp)),
         verticalArrangement = Arrangement.SpaceEvenly,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        Image(
-            painterResource(id = houseShare.image),
-            contentDescription = "Group image",
-            modifier = Modifier.size(80.dp),
-            contentScale = ContentScale.Crop
-        )
+        horizontalAlignment = Alignment.CenterHorizontally) {
+//        Image(
+//            painterResource(id = houseShare.image),
+//            contentDescription = "Group image",
+//            modifier = Modifier.size(80.dp),
+//            contentScale = ContentScale.Crop
+//        )
 //        Spacer(modifier = Modifier.height(10.dp))
         Text(text = houseShare.name, style = TextStyle(color = Color.White, fontSize = 20.sp))
     }
@@ -62,7 +62,9 @@ fun Card(houseShare: HouseShare, onCardClick: () -> Unit) {
 @Composable
 @Preview
 fun Projects() {
-    val houseShare = HouseShareData.getHouseShare()
+    val houseShare = remember { mutableStateOf(listOf<HouseShare>()) }
+    HouseSharesService.getUsersHouseShares(1) { houseShares -> houseShare.value = houseShares }
+
     val (selectedProject, setSelectedProject) = remember { mutableStateOf<HouseShare?>(null) }
     ColloGestionTheme {
         if (selectedProject != null) {
@@ -71,10 +73,12 @@ fun Projects() {
             }
         } else {
             Column(
-                Modifier.fillMaxWidth().padding(10.dp),
+                Modifier
+                    .fillMaxWidth()
+                    .padding(10.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                houseShare.forEach { houseShare ->
+                houseShare.value.forEach { houseShare ->
                     Card(houseShare = houseShare) {
                         setSelectedProject(houseShare) // Set selected project to show project details
                     }

@@ -55,6 +55,7 @@ def add_due(
     db: Session = Depends(get_db),
     current_user_id: str = Depends(get_current_user),
 ):
+    print(due)
     try:
         if due.creditor_id == due.debtor_id:
             raise HTTPException(
