@@ -38,6 +38,7 @@ class Due(Base):
     __tablename__ = "due"
 
     id = Column(Integer, primary_key=True, index=True)
+    title = Column(String(100), nullable=False)
     amount = Column(Integer, nullable=False)
     creditor_id = Column(Integer, ForeignKey("user.id"), nullable=False)
     debtor_id = Column(Integer, ForeignKey("user.id"), nullable=False)
@@ -49,6 +50,14 @@ class Due(Base):
     creditor = relationship(
         "User", back_populates="creditor_dues", foreign_keys=[creditor_id]
     )
+
+    @property
+    def debtor_name(self):
+        return self.debtor.first_name
+
+    @property
+    def creditor_name(self):
+        return self.creditor.first_name
 
 
 class Task(Base):

@@ -67,9 +67,13 @@ class Task(TaskBase):
 
 class DueBase(BaseModel):
     amount: float
+    title: str
     creditor_id: int
     debtor_id: int
     house_share_id: int
+
+    debtor_name: str
+    creditor_name: str
 
 
 class DueCreate(DueBase):

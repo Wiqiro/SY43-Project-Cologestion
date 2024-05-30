@@ -1,4 +1,4 @@
-package com.collogestion
+package com.collogestion.ui.user
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.BorderStroke
@@ -16,8 +16,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -38,25 +38,20 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.material3.SegmentedButton
-import androidx.compose.material3.SegmentedButtonDefaults
 import androidx.compose.material3.SingleChoiceSegmentedButtonRow
-import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldColors
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.unit.TextUnit
-import androidx.core.content.ContextCompat
+import com.collogestion.R
 
 
 @SuppressLint("ResourceAsColor")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 @Preview
-fun Profile() {
+fun ProfileScreen() {
         Surface(modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight(),
@@ -66,7 +61,7 @@ fun Profile() {
                 modifier = Modifier
                     .width((LocalConfiguration.current.screenWidthDp * 0.85).dp)
             ) {
-                androidx.compose.material3.Card(
+                Card(
                     modifier = Modifier
                         .fillMaxWidth()) {
                     Column(
@@ -100,7 +95,7 @@ fun Profile() {
                     Text(text = stringResource(id = R.string.theme), style = TextStyle(color = Color.White, fontSize = 20.sp))
                 }
                 Spacer(modifier = Modifier.height(10.dp))
-                androidx.compose.material3.Card(
+                Card(
                     modifier = Modifier
                         .background(color = Color.Transparent)
                         .fillMaxWidth()) {
@@ -130,7 +125,7 @@ fun Profile() {
                     Text(text = stringResource(id = R.string.notifications), style = TextStyle(color = Color.White, fontSize = 20.sp))
                 }
                 Spacer(modifier = Modifier.height(10.dp))
-                androidx.compose.material3.Card(
+                Card(
                     modifier = Modifier
                         .background(color = Color.Transparent)
                         .fillMaxWidth()) {
@@ -155,7 +150,7 @@ fun Profile() {
                     }
                 }
                 Spacer(modifier = Modifier.height(50.dp))
-                androidx.compose.material3.Card(
+                Card(
                     modifier = Modifier
                         .background(color = Color.Black)
                         .border(BorderStroke(width = 0.dp, color = Color(0xFF211F26)),
@@ -171,7 +166,7 @@ fun Profile() {
                     )
                 }
                 Spacer(modifier = Modifier.height(15.dp))
-                androidx.compose.material3.Card(
+                Card(
                     modifier = Modifier
                         .background(color = Color.Black)
                         .border(BorderStroke(width = 0.dp, color = Color(0xFF211F26)),

@@ -1,4 +1,4 @@
-package com.collogestion
+package com.collogestion.ui
 
 
 import android.annotation.SuppressLint
@@ -11,7 +11,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material3.AlertDialogDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -25,12 +24,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.sp
-import androidx.core.content.ContextCompat
+import com.collogestion.ui.house_share.Projects
+import com.collogestion.ui.user.PersonalDashboardScreen
+import com.collogestion.ui.user.ProfileScreen
 
 @SuppressLint("ResourceAsColor")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-//@Preview(showBackground = true)
 fun Dashboard(page: Int, pageName: String) {
     Scaffold(
         topBar = {
@@ -45,13 +45,13 @@ fun Dashboard(page: Int, pageName: String) {
             )
         },
         floatingActionButton = {
-            if(page == 0) {
+            if (page == 0) {
                 FloatingActionButton(onClick = {}) {
                     Icon(Icons.Default.Add, contentDescription = "Add")
                 }
             }
         }
-    ) {innerPadding ->
+    ) { innerPadding ->
         Column(
             modifier = Modifier
                 .padding(innerPadding),
@@ -68,8 +68,8 @@ fun Dashboard(page: Int, pageName: String) {
             ) {
                 when (page) {
                     0 -> Projects()
-                    1 -> PersonalTask()
-                    2 -> Profile()
+                    1 -> PersonalDashboardScreen()
+                    2 -> ProfileScreen()
                 }
             }
         }

@@ -1,8 +1,10 @@
-package com.collogestion.services
+package com.collogestion.network
 
 import android.content.Context
 import android.content.SharedPreferences
 import com.collogestion.data.Token
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import okhttp3.FormBody
 
 object AuthService {
@@ -23,26 +25,28 @@ object AuthService {
         return loggedIn
     }
 
-    fun login(email: String, password: String, callback: (String?) -> Unit) {
-
-        HttpClient.postRequest(
-            "/auth/token", FormBody.Builder()
-                .add("username", email)
-                .add("password", password)
-                .build()
-        ) { response ->
-            response?.let {
+    suspend fun login(email: String, password: String): String {
+        return withContext(Dispatchers.IO) {
+            val response = HttpClient.postRequest(
+                "/auth/token", FormBody.Builder()
+                    .add("username", email)
+                    .add("password", password)
+                    .build()
+            )
+            response.let {
                 val token = HttpClient.gson.fromJson(it, Token::class.java)
                 HttpClient.setToken(token.access_token)
                 saveToken(token.access_token)
+                loggedIn = true
             }
-            callback(response)
+            response
         }
     }
 
     fun logout() {
         sharedPreferences.edit().remove("token").apply()
         HttpClient.removeToken()
+        loggedIn = false
     }
 
     private fun saveToken(token: String) {

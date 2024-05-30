@@ -25,6 +25,7 @@ async def get_user_dues(
             )
             .all()
         )
+
     except NoResultFound:
         raise HTTPException(status_code=404, detail="User not found")
     except Exception as e:

@@ -1,7 +1,6 @@
-package com.collogestion
+package com.collogestion.ui.main
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.Arrangement
@@ -28,8 +27,12 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.collogestion.services.AuthService
+import androidx.lifecycle.lifecycleScope
+import com.collogestion.R
+import com.collogestion.network.AuthService
+import com.collogestion.ui.Dashboard
 import com.collogestion.ui.theme.ColloGestionTheme
+import kotlinx.coroutines.launch
 
 
 class MainActivity : ComponentActivity() {
@@ -37,7 +40,9 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         AuthService.initialize(this)
-        AuthService.login("string@email.com", "string") {}
+        lifecycleScope.launch {
+            AuthService.login("string@email.com", "string")
+        }
         setContent {
             ColloGestionTheme {
                 Surface(
