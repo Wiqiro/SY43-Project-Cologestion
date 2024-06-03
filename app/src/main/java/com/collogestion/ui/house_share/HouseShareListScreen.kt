@@ -22,10 +22,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.collogestion.data.HouseShare
 import com.collogestion.ui.theme.ColloGestionTheme
 
@@ -55,8 +55,10 @@ fun HouseShareCard(houseShare: HouseShare, onCardClick: () -> Unit) {
 }
 
 @Composable
-@Preview
-fun HouseShareListScreen(houseShareViewModel: HouseShareViewModel = viewModel()) {
+fun HouseShareListScreen(
+    navController: NavController,
+    houseShareViewModel: HouseShareViewModel = viewModel()
+) {
     val houseShareUiState by houseShareViewModel.uiState.collectAsState()
     houseShareViewModel.loadUsersHouseShares(1)
 
@@ -77,7 +79,7 @@ fun HouseShareListScreen(houseShareViewModel: HouseShareViewModel = viewModel())
             ) {
                 houseShareUiState.houseShares.forEach { houseShare ->
                     HouseShareCard(houseShare = houseShare) {
-                        setSelectedProject(houseShare) // Set selected project to show project details
+                        navController.navigate("house_share_details")
                     }
                     Spacer(modifier = Modifier.height(40.dp))
                 }

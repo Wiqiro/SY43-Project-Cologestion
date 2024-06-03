@@ -55,17 +55,14 @@ fun ProfileScreen() {
     Surface(
         modifier = Modifier
             .fillMaxWidth()
-            .fillMaxHeight(),
-        color = Color.Black
+            .fillMaxHeight(), color = Color.Black
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier
-                .width((LocalConfiguration.current.screenWidthDp * 0.85).dp)
+            modifier = Modifier.width((LocalConfiguration.current.screenWidthDp * 0.85).dp)
         ) {
             Card(
-                modifier = Modifier
-                    .fillMaxWidth()
+                modifier = Modifier.fillMaxWidth()
             ) {
                 Column(
                     modifier = Modifier
@@ -132,8 +129,7 @@ fun ProfileScreen() {
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(color = Color(0xFF211F26))
-                )
-                {
+                ) {
                     options.forEachIndexed { index, label ->
                         SegmentedButton(
                             modifier = Modifier.padding(15.dp),
@@ -174,8 +170,7 @@ fun ProfileScreen() {
                     modifier = Modifier
                         .fillMaxWidth()
                         .background(color = Color(0xFF211F26))
-                )
-                {
+                ) {
                     choices.forEachIndexed { index, label ->
                         SegmentedButton(
                             modifier = Modifier.padding(15.dp),
@@ -198,13 +193,11 @@ fun ProfileScreen() {
                     .fillMaxWidth()
             ) {
                 var emailText by rememberSaveable { mutableStateOf("") }
-                TextField(
-                    value = emailText,
+                TextField(value = emailText,
                     onValueChange = { emailText = it },
                     label = { Text(stringResource(id = R.string.email)) },
 //                        readOnly = true,
-                    placeholder = { Text(stringResource(id = R.string.email_placeholder)) }
-                )
+                    placeholder = { Text(stringResource(id = R.string.email_placeholder)) })
             }
             Spacer(modifier = Modifier.height(15.dp))
             Card(
@@ -216,15 +209,12 @@ fun ProfileScreen() {
                     .fillMaxWidth()
             ) {
                 var phoneText by rememberSaveable { mutableStateOf("") }
-                TextField(
-                    value = phoneText,
+                TextField(value = phoneText,
                     onValueChange = { phoneText = it },
                     label = { Text(stringResource(id = R.string.phone)) },
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    placeholder = { Text(stringResource(id = R.string.phone_placeholder)) }
-                )
+                    placeholder = { Text(stringResource(id = R.string.phone_placeholder)) })
             }
         }
-
     }
 }
