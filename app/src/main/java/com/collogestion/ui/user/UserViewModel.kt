@@ -97,10 +97,17 @@ class UserViewModel : ViewModel() {
         }
     }
 
-    fun addUser(firstName: String, lastName: String, email: String, phone: String, password: String) {
+    fun addUser(
+        firstName: String,
+        lastName: String,
+        email: String,
+        phone: String,
+        password: String
+    ) {
         setLoading(true)
         viewModelScope.launch {
-            val result = runCatching { UsersService.addUser(firstName, lastName, email, phone, password) }
+            val result =
+                runCatching { UsersService.addUser(firstName, lastName, email, phone, password) }
             result.onSuccess { newUser ->
                 setUser(newUser)
                 setLoading(false)

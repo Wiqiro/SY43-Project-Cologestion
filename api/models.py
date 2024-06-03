@@ -79,7 +79,6 @@ class GroceryList(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(100), nullable=False)
     house_share_id = Column(Integer, ForeignKey("house_share.id"), nullable=False)
-    assignee_id = Column(Integer, ForeignKey("user.id"))
 
     items = relationship("GroceryItem", back_populates="list")
 

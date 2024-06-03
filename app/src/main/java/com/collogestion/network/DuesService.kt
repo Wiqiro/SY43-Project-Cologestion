@@ -25,7 +25,13 @@ object DuesService {
         return HttpClient.gson.fromJson(response, Due::class.java)
     }
 
-    suspend fun editDue(dueId: Int, amount: Double, creditorId: Int, debtorId: Int, houseShareId: Int): Due {
+    suspend fun editDue(
+        dueId: Int,
+        amount: Double,
+        creditorId: Int,
+        debtorId: Int,
+        houseShareId: Int
+    ): Due {
         val data = mapOf(
             "amount" to amount,
             "creditor_id" to creditorId,

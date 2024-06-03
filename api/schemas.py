@@ -123,7 +123,6 @@ class GroceryItem(GroceryItemBase):
 class GroceryListBase(BaseModel):
     name: str
     house_share_id: int
-    assignee_id: int
 
 
 class GroceryListCreate(GroceryListBase):

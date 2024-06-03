@@ -5,7 +5,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
@@ -15,9 +14,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.sp
 import com.collogestion.data.HouseShare
-import com.collogestion.ui.house_share.ProjectZone
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun Project(project: HouseShare, onBackClick: () -> Unit) {
     Column {
@@ -26,11 +23,15 @@ fun Project(project: HouseShare, onBackClick: () -> Unit) {
             verticalAlignment = Alignment.CenterVertically
         ) {
             IconButton(onClick = onBackClick) {
-                Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back", tint = Color.White)
+                Icon(
+                    Icons.AutoMirrored.Filled.ArrowBack,
+                    contentDescription = "Back",
+                    tint = Color.White
+                )
             }
             Text(text = project.name, style = TextStyle(color = Color.White, fontSize = 20.sp))
 
         }
-        ProjectZone(houseShare = project)
+        HouseShareDetailsScreen(houseShare = project)
     }
 }

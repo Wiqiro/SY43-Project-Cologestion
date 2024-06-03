@@ -1,6 +1,5 @@
 package com.collogestion.ui.task
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.collogestion.data.Task
@@ -69,7 +68,8 @@ class TaskViewModel : ViewModel() {
     fun addTask(name: String, deadline: String, assigneeId: Int, houseShareId: Int) {
         setLoading(true)
         viewModelScope.launch {
-            val result = runCatching { TasksService.addTask(name, deadline, assigneeId, houseShareId) }
+            val result =
+                runCatching { TasksService.addTask(name, deadline, assigneeId, houseShareId) }
             result.onSuccess { newTask ->
                 setTasks(_uiState.value.tasks + newTask)
                 setLoading(false)
@@ -83,7 +83,15 @@ class TaskViewModel : ViewModel() {
     fun editTask(taskId: Int, name: String, deadline: String, assigneeId: Int, houseShareId: Int) {
         setLoading(true)
         viewModelScope.launch {
-            val result = runCatching { TasksService.editTask(taskId, name, deadline, assigneeId, houseShareId) }
+            val result = runCatching {
+                TasksService.editTask(
+                    taskId,
+                    name,
+                    deadline,
+                    assigneeId,
+                    houseShareId
+                )
+            }
             result.onSuccess { updatedTask ->
                 val updatedList = _uiState.value.tasks.map { task ->
                     if (task.id == taskId) updatedTask else task

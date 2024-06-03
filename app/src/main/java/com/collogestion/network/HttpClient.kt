@@ -2,10 +2,13 @@ package com.collogestion.network
 
 import android.util.Log
 import com.google.gson.Gson
-import okhttp3.*
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import okhttp3.FormBody
 import okhttp3.MediaType.Companion.toMediaType
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.RequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
 import java.io.IOException
 
@@ -22,24 +25,28 @@ object HttpClient {
         executeRequest(request)
     }
 
-    suspend fun postRequest(url: String, requestBody: RequestBody? = null): String = withContext(Dispatchers.IO) {
-        val request = createRequestBuilder(url).post(requestBody ?: FormBody.Builder().build()).build()
-        executeRequest(request)
-    }
+    suspend fun postRequest(url: String, requestBody: RequestBody? = null): String =
+        withContext(Dispatchers.IO) {
+            val request =
+                createRequestBuilder(url).post(requestBody ?: FormBody.Builder().build()).build()
+            executeRequest(request)
+        }
 
-    suspend fun postRequest(url: String, requestBody: Map<String, Any>?): String = withContext(Dispatchers.IO) {
-        val json = gson.toJson(requestBody)
-        val body = json.toRequestBody("application/json; charset=utf-8".toMediaType())
-        val request = createRequestBuilder(url).post(body).build()
-        executeRequest(request)
-    }
+    suspend fun postRequest(url: String, requestBody: Map<String, Any>?): String =
+        withContext(Dispatchers.IO) {
+            val json = gson.toJson(requestBody)
+            val body = json.toRequestBody("application/json; charset=utf-8".toMediaType())
+            val request = createRequestBuilder(url).post(body).build()
+            executeRequest(request)
+        }
 
-    suspend fun putRequest(url: String, requestBody: Map<String, Any>?): String = withContext(Dispatchers.IO) {
-        val json = gson.toJson(requestBody)
-        val body = json.toRequestBody("application/json; charset=utf-8".toMediaType())
-        val request = createRequestBuilder(url).put(body).build()
-        executeRequest(request)
-    }
+    suspend fun putRequest(url: String, requestBody: Map<String, Any>?): String =
+        withContext(Dispatchers.IO) {
+            val json = gson.toJson(requestBody)
+            val body = json.toRequestBody("application/json; charset=utf-8".toMediaType())
+            val request = createRequestBuilder(url).put(body).build()
+            executeRequest(request)
+        }
 
     suspend fun deleteRequest(url: String): String = withContext(Dispatchers.IO) {
         val request = createRequestBuilder(url).delete().build()

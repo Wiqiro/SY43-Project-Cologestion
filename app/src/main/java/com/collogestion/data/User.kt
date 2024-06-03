@@ -9,5 +9,5 @@ class User(
     @SerializedName("profile_picture") var profilePicture: String,
     @SerializedName("email") var mail: String,
     @SerializedName("phone") var phone: String,
-    var spendings : List<Due>
+    var spendings: List<Due>
 )

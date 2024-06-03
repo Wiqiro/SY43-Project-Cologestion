@@ -68,7 +68,8 @@ class GroceryViewModel : ViewModel() {
     fun addGroceryList(name: String, assigneeId: Int, houseShareId: Int) {
         setLoading(true)
         viewModelScope.launch {
-            val result = runCatching { GroceriesService.addGroceryList(name, assigneeId, houseShareId) }
+            val result =
+                runCatching { GroceriesService.addGroceryList(name, assigneeId, houseShareId) }
             result.onSuccess { newGroceryList ->
                 setGroceryLists(_uiState.value.groceryLists + newGroceryList)
                 setLoading(false)
@@ -82,7 +83,14 @@ class GroceryViewModel : ViewModel() {
     fun editGroceryList(groceryListId: Int, name: String, assigneeId: Int, houseShareId: Int) {
         setLoading(true)
         viewModelScope.launch {
-            val result = runCatching { GroceriesService.editGroceryList(groceryListId, name, assigneeId, houseShareId) }
+            val result = runCatching {
+                GroceriesService.editGroceryList(
+                    groceryListId,
+                    name,
+                    assigneeId,
+                    houseShareId
+                )
+            }
             result.onSuccess { updatedGroceryList ->
                 val updatedList = _uiState.value.groceryLists.map { groceryList ->
                     if (groceryList.id == groceryListId) updatedGroceryList else groceryList

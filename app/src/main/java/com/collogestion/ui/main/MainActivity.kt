@@ -9,9 +9,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.List
 import androidx.compose.material.icons.outlined.AccountCircle
 import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.List
 import androidx.compose.material3.Icon
 import androidx.compose.material3.NavigationBar
 import androidx.compose.material3.NavigationBarItem
@@ -56,7 +56,7 @@ class MainActivity : ComponentActivity() {
                             ) {
                                 val outlinedIconsList = listOf(
                                     Icons.Outlined.Home,
-                                    Icons.Outlined.List,
+                                    Icons.AutoMirrored.Outlined.List,
                                     Icons.Outlined.AccountCircle
                                 )
                                 val items = listOf(

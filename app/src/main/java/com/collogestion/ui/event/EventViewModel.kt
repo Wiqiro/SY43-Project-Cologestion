@@ -69,7 +69,15 @@ class EventViewModel : ViewModel() {
     fun editEvent(eventId: Int, date: Date, title: String, duration: Int, houseShareId: Int) {
         setLoading(true)
         viewModelScope.launch {
-            val result = runCatching { EventsService.editEvent(eventId, date, title, duration, houseShareId) }
+            val result = runCatching {
+                EventsService.editEvent(
+                    eventId,
+                    date,
+                    title,
+                    duration,
+                    houseShareId
+                )
+            }
             result.onSuccess { updatedEvent ->
                 val updatedList = _uiState.value.events.map { event ->
                     if (event.id == eventId) updatedEvent else event

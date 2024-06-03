@@ -13,7 +13,13 @@ object UsersService {
         return HttpClient.gson.fromJson(response, Array<User>::class.java).toList()
     }
 
-    suspend fun addUser(firstname: String, lastname: String, email: String, phone: String, password: String): User {
+    suspend fun addUser(
+        firstname: String,
+        lastname: String,
+        email: String,
+        phone: String,
+        password: String
+    ): User {
         val body = mapOf(
             "first_name" to firstname,
             "last_name" to lastname,

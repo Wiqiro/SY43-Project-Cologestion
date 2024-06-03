@@ -1,8 +1,5 @@
 package com.collogestion.ui.house_share
 
-import com.collogestion.data.HouseShare
-import com.collogestion.ui.theme.ColloGestionTheme
-
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -29,10 +26,12 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.collogestion.data.HouseShare
+import com.collogestion.ui.theme.ColloGestionTheme
 
 
 @Composable
-fun Card(houseShare: HouseShare, onCardClick: () -> Unit) {
+fun HouseShareCard(houseShare: HouseShare, onCardClick: () -> Unit) {
     Column(Modifier
 //            .border(border = BorderStroke(width = 1.dp, color = Color.Red), shape = RoundedCornerShape(30.0.dp))
         .width((LocalConfiguration.current.screenWidthDp * 0.85).dp)
@@ -57,7 +56,7 @@ fun Card(houseShare: HouseShare, onCardClick: () -> Unit) {
 
 @Composable
 @Preview
-fun Projects(houseShareViewModel: HouseShareViewModel = viewModel()) {
+fun HouseShareListScreen(houseShareViewModel: HouseShareViewModel = viewModel()) {
     val houseShareUiState by houseShareViewModel.uiState.collectAsState()
     houseShareViewModel.loadUsersHouseShares(1)
 
@@ -77,7 +76,7 @@ fun Projects(houseShareViewModel: HouseShareViewModel = viewModel()) {
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 houseShareUiState.houseShares.forEach { houseShare ->
-                    Card(houseShare = houseShare) {
+                    HouseShareCard(houseShare = houseShare) {
                         setSelectedProject(houseShare) // Set selected project to show project details
                     }
                     Spacer(modifier = Modifier.height(40.dp))

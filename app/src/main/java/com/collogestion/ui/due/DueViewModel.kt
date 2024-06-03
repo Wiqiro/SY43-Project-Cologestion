@@ -68,7 +68,8 @@ class DueViewModel : ViewModel() {
     fun addDue(amount: Double, creditorId: Int, debtorId: Int, houseShareId: Int) {
         setLoading(true)
         viewModelScope.launch {
-            val result = runCatching { DuesService.addDue(amount, creditorId, debtorId, houseShareId) }
+            val result =
+                runCatching { DuesService.addDue(amount, creditorId, debtorId, houseShareId) }
             result.onSuccess { newDue ->
                 setDues(_uiState.value.dues + newDue)
                 setLoading(false)
@@ -82,7 +83,15 @@ class DueViewModel : ViewModel() {
     fun editDue(dueId: Int, amount: Double, creditorId: Int, debtorId: Int, houseShareId: Int) {
         setLoading(true)
         viewModelScope.launch {
-            val result = runCatching { DuesService.editDue(dueId, amount, creditorId, debtorId, houseShareId) }
+            val result = runCatching {
+                DuesService.editDue(
+                    dueId,
+                    amount,
+                    creditorId,
+                    debtorId,
+                    houseShareId
+                )
+            }
             result.onSuccess { updatedDue ->
                 val updatedList = _uiState.value.dues.map { due ->
                     if (due.id == dueId) updatedDue else due

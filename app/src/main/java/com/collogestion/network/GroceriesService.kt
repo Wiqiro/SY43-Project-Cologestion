@@ -2,7 +2,6 @@ package com.collogestion.services
 
 import com.collogestion.data.GroceryList
 import com.collogestion.network.HttpClient
-import okhttp3.FormBody
 
 object GroceriesService {
     suspend fun getUserGroceryLists(userId: Int): List<GroceryList> {
@@ -26,7 +25,12 @@ object GroceriesService {
         return HttpClient.gson.fromJson(response, GroceryList::class.java)
     }
 
-    suspend fun editGroceryList(groceryListId: Int, name: String, assigneeId: Int, houseShareId: Int): GroceryList {
+    suspend fun editGroceryList(
+        groceryListId: Int,
+        name: String,
+        assigneeId: Int,
+        houseShareId: Int
+    ): GroceryList {
         val body = mapOf(
             "name" to name,
             "assignee_id" to assigneeId,

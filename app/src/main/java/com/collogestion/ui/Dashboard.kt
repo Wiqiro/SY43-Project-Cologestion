@@ -21,10 +21,10 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.unit.dp
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.collogestion.ui.house_share.Projects
+import com.collogestion.ui.house_share.HouseShareListScreen
 import com.collogestion.ui.user.PersonalDashboardScreen
 import com.collogestion.ui.user.ProfileScreen
 
@@ -67,7 +67,7 @@ fun Dashboard(page: Int, pageName: String) {
                     )
             ) {
                 when (page) {
-                    0 -> Projects()
+                    0 -> HouseShareListScreen()
                     1 -> PersonalDashboardScreen()
                     2 -> ProfileScreen()
                 }
