@@ -62,28 +62,21 @@ fun HouseShareListScreen(
     val houseShareUiState by houseShareViewModel.uiState.collectAsState()
     houseShareViewModel.loadUsersHouseShares(1)
 
-    val (selectedProject, setSelectedProject) = remember { mutableStateOf<HouseShare?>(null) }
-
 
     ColloGestionTheme {
-        if (selectedProject != null) {
-            Project(project = selectedProject) {
-                setSelectedProject(null) // Clear selected project to go back to project list
-            }
-        } else {
-            Column(
-                Modifier
-                    .fillMaxWidth()
-                    .padding(10.dp),
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                houseShareUiState.houseShares.forEach { houseShare ->
-                    HouseShareCard(houseShare = houseShare) {
-                        navController.navigate("house_share_details")
-                    }
-                    Spacer(modifier = Modifier.height(40.dp))
+        Column(
+            Modifier
+                .fillMaxWidth()
+                .padding(10.dp),
+            horizontalAlignment = Alignment.CenterHorizontally
+        ) {
+            houseShareUiState.houseShares.forEach { houseShare ->
+                HouseShareCard(houseShare = houseShare) {
+                    navController.navigate("house_share_details/${houseShare.id}")
                 }
+                Spacer(modifier = Modifier.height(40.dp))
             }
+
         }
     }
 }

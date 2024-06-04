@@ -3,6 +3,8 @@ package com.collogestion.ui.house_share
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -15,7 +17,6 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.collogestion.data.HouseShare
 import com.collogestion.ui.due.DueCard
 import com.collogestion.ui.due.DueViewModel
 import com.collogestion.ui.event.EventCard
@@ -27,30 +28,37 @@ import com.collogestion.ui.task.TaskViewModel
 
 @Composable
 fun HouseShareDetailsScreen(
-    houseShare: HouseShare,
+    houseShareId: Int,
+    houseShareViewModel: HouseShareViewModel = viewModel(),
     groceryViewModel: GroceryViewModel = viewModel(),
     taskViewModel: TaskViewModel = viewModel(),
     eventViewModel: EventViewModel = viewModel(),
     dueViewModel: DueViewModel = viewModel()
 ) {
+    val houseShareUiState by houseShareViewModel.uiState.collectAsState()
+    LaunchedEffect(Unit) {
+        houseShareViewModel.loadHouseShare(houseShareId)
+    }
+    val houseShare = houseShareUiState.houseShares.find { it.id == houseShareId }
+
     val groceryUiState by groceryViewModel.uiState.collectAsState()
     LaunchedEffect(Unit) {
-        groceryViewModel.loadHouseShareGroceryLists(houseShare.id)
+        groceryViewModel.loadHouseShareGroceryLists(houseShareId)
     }
 
     val taskUiState by taskViewModel.uiState.collectAsState()
     LaunchedEffect(Unit) {
-        taskViewModel.loadHouseShareTasks(houseShare.id)
+        taskViewModel.loadHouseShareTasks(houseShareId)
     }
 
     val eventUiState by eventViewModel.uiState.collectAsState()
     LaunchedEffect(Unit) {
-        eventViewModel.loadHouseShareEvents(houseShare.id)
+        eventViewModel.loadHouseShareEvents(houseShareId)
     }
 
     val dueUiState by dueViewModel.uiState.collectAsState()
     LaunchedEffect(Unit) {
-        dueViewModel.loadHouseShareDues(houseShare.id)
+        dueViewModel.loadHouseShareDues(houseShareId)
     }
 
     if (taskUiState.errorMessage != null) {
@@ -63,9 +71,15 @@ fun HouseShareDetailsScreen(
     Column(
         Modifier
             .fillMaxWidth()
-            .padding(10.dp), horizontalAlignment = Alignment.CenterHorizontally
+            .verticalScroll(rememberScrollState())
+            .padding(10.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+
     ) {
-        Text(text = houseShare.name, style = TextStyle(color = Color.White, fontSize = 30.sp))
+        Text(
+            text = houseShare?.name ?: "",
+            style = TextStyle(color = Color.White, fontSize = 30.sp)
+        )
         GroceryListCard(groceryUiState.groceryLists)
         TaskCard(taskUiState.tasks)
         EventCard(eventUiState.events)

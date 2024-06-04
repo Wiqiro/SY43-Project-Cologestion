@@ -3,6 +3,8 @@ package com.collogestion.ui.user
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -46,7 +48,9 @@ fun PersonalDashboardScreen(
     Column(
         Modifier
             .fillMaxWidth()
-            .padding(10.dp), horizontalAlignment = Alignment.CenterHorizontally
+            .verticalScroll(rememberScrollState())
+            .padding(10.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         TaskCard(taskUiState.tasks)
         DueCard(dueUiState.dues)

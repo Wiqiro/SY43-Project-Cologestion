@@ -54,150 +54,124 @@ class MainActivity : ComponentActivity() {
                 val navController = rememberNavController()
                 val currentRoute =
                     navController.currentBackStackEntryAsState().value?.destination?.route
-                Scaffold(
-                    topBar = {
-
-                        TopAppBar(
-                            colors = TopAppBarDefaults.topAppBarColors(
-                                containerColor = Color(0xFF211F26),
-                                titleContentColor = Color.White,
-                                navigationIconContentColor = Color.White
-                            ),
-                            title = {
-                                Text(
-                                    when (currentRoute) {
-                                        "house_share" -> "House Share"
-                                        "house_share_details" -> "House Share Details"
-                                        "personal" -> "Personal"
-                                        "profile" -> "Profile"
-                                        else -> "ColoGestion"
-                                    }, style = TextStyle(fontSize = 20.sp)
+                Scaffold(topBar = {
+                    TopAppBar(colors = TopAppBarDefaults.topAppBarColors(
+                        containerColor = Color(0xFF211F26),
+                        titleContentColor = Color.White,
+                        navigationIconContentColor = Color.White
+                    ), title = {
+                        Text(
+                            when {
+                                currentRoute?.startsWith("house_share_details") == true -> "House Share Details"
+                                currentRoute == "house_share" -> "House Share"
+                                currentRoute == "personal" -> "Personal"
+                                currentRoute == "profile" -> "Profile"
+                                else -> "ColoGestion"
+                            }, style = TextStyle(fontSize = 20.sp)
+                        )
+                    }, navigationIcon = {
+                        if (currentRoute?.startsWith("house_share_details") == true) {
+                            IconButton(onClick = { navController.popBackStack() }) {
+                                Icon(
+                                    Icons.AutoMirrored.Filled.ArrowBack,
+                                    contentDescription = "Back"
                                 )
-                            },
-                            navigationIcon = {
-                                if (currentRoute == "house_share_details") {
-                                    IconButton(onClick = { navController.popBackStack() }) {
-                                        Icon(
-                                            Icons.AutoMirrored.Filled.ArrowBack,
-                                            contentDescription = "Back"
-                                        )
 
-                                    }
-                                }
-                            }
-                        )
-                    },
-                    floatingActionButton = {
-                        if (/*page == 0*/true) {
-                            FloatingActionButton(onClick = {}) {
-                                Icon(Icons.Default.Add, contentDescription = "Add")
                             }
                         }
-                    },
-                    bottomBar = {
-                        NavigationBar(containerColor = Color.DarkGray) {
-                            NavigationBarItem(
-                                selected = currentRoute == "house_share" || currentRoute == "house_share_details",
-                                onClick = {
-                                    navController.navigate("house_share") {
-                                        popUpTo(navController.graph.startDestinationRoute!!) {
-                                            saveState = true
-                                        }
-                                        launchSingleTop = true
-                                        restoreState = true
-                                    }
-                                },
-                                icon = {
-                                    Icon(
-                                        Icons.Outlined.Home, contentDescription = "Home",
-                                        tint = Color.White
-                                    )
-                                },
-                                label = {
-                                    Text(
-                                        "Home",
-                                        style = TextStyle(
-                                            color = Color.White,
-                                            fontSize = 15.sp
-                                        )
-                                    )
+                    })
+                }, bottomBar = {
+                    NavigationBar(containerColor = Color.DarkGray) {
+                        NavigationBarItem(selected = currentRoute?.startsWith(
+                            "house_share"
+                        ) ?: false, onClick = {
+                            navController.navigate("house_share") {
+                                popUpTo(navController.graph.startDestinationRoute!!) {
+                                    saveState = true
                                 }
+                                launchSingleTop = true
+                                restoreState = true
+                            }
+                        }, icon = {
+                            Icon(
+                                Icons.Outlined.Home,
+                                contentDescription = "Home",
+                                tint = Color.White
                             )
-                            NavigationBarItem(
-                                selected = currentRoute == "personal",
-                                onClick = {
-                                    navController.navigate("personal") {
-                                        popUpTo(navController.graph.startDestinationRoute!!) {
-                                            saveState = true
-                                        }
-                                        launchSingleTop = true
-                                        restoreState = true
-                                    }
-                                },
-                                icon = {
-                                    Icon(
-                                        Icons.Outlined.Menu, contentDescription = "Personal",
-                                        tint = Color.White
-                                    )
-                                },
-                                label = {
-                                    Text(
-                                        "Personal",
-                                        style = TextStyle(
-                                            color = Color.White,
-                                            fontSize = 15.sp
-                                        )
-                                    )
+                        }, label = {
+                            Text(
+                                "House share", style = TextStyle(
+                                    color = Color.White, fontSize = 15.sp
+                                )
+                            )
+                        })
+                        NavigationBarItem(selected = currentRoute == "personal", onClick = {
+                            navController.navigate("personal") {
+                                popUpTo(navController.graph.startDestinationRoute!!) {
+                                    saveState = true
                                 }
+                                launchSingleTop = true
+                                restoreState = true
+                            }
+                        }, icon = {
+                            Icon(
+                                Icons.Outlined.Menu,
+                                contentDescription = "My tasks",
+                                tint = Color.White
                             )
-                            NavigationBarItem(
-                                selected = currentRoute == "profile",
-                                onClick = {
-                                    navController.navigate("profile") {
-                                        popUpTo(navController.graph.startDestinationRoute!!) {
-                                            saveState = true
-                                        }
-                                        launchSingleTop = true
-                                        restoreState = true
-                                    }
-                                },
-                                icon = {
-                                    Icon(
-                                        Icons.Outlined.Person, contentDescription = "Profile",
-                                        tint = Color.White
-                                    )
-                                },
-                                label = {
-                                    Text(
-                                        "Profile",
-                                        style = TextStyle(
-                                            color = Color.White,
-                                            fontSize = 15.sp
-                                        )
-                                    )
+                        }, label = {
+                            Text(
+                                "Personal", style = TextStyle(
+                                    color = Color.White, fontSize = 15.sp
+                                )
+                            )
+                        })
+                        NavigationBarItem(selected = currentRoute == "profile", onClick = {
+                            navController.navigate("profile") {
+                                popUpTo(navController.graph.startDestinationRoute!!) {
+                                    saveState = true
                                 }
+                                launchSingleTop = true
+                                restoreState = true
+                            }
+                        }, icon = {
+                            Icon(
+                                Icons.Outlined.Person,
+                                contentDescription = "Profile",
+                                tint = Color.White
                             )
-                        }
+                        }, label = {
+                            Text(
+                                "Profile", style = TextStyle(
+                                    color = Color.White, fontSize = 15.sp
+                                )
+                            )
+                        })
+                    }
 
-                    }, modifier = Modifier.fillMaxSize(), containerColor = Color.Black
+                }, floatingActionButton = {
+                    if (currentRoute?.startsWith("house_share") == true) {
+                        FloatingActionButton(onClick = {}) {
+                            Icon(Icons.Default.Add, contentDescription = "Add")
+                        }
+                    }
+                }, modifier = Modifier.fillMaxSize(), containerColor = Color.Black
                 ) { innerPadding ->
-                    val dummyHouseShare =
-                        HouseShare(
-                            1,
-                            "House Share 1",
-                            "/",
-                            0,
-                            emptyList(),
-                            emptyList(),
-                            emptyList()
-                        )
+                    val dummyHouseShare = HouseShare(
+                        1, "House Share 1", "/", 0, emptyList(), emptyList(), emptyList()
+                    )
                     NavHost(
-                        navController, startDestination = "house_share",
-                        modifier = Modifier
-                            .padding(innerPadding),
+                        navController,
+                        startDestination = "house_share",
+                        modifier = Modifier.padding(innerPadding)
                     ) {
                         composable("house_share") { HouseShareListScreen(navController) }
-                        composable("house_share_details") { HouseShareDetailsScreen(dummyHouseShare) }
+                        composable("house_share_details/{id}") { backStackEntry ->
+                            val id = backStackEntry.arguments?.getString("id")?.toIntOrNull()
+                            if (id != null) {
+                                HouseShareDetailsScreen(id)
+                            }
+                        }
                         composable("personal") { PersonalDashboardScreen() }
                         composable("profile") { ProfileScreen() }
 
