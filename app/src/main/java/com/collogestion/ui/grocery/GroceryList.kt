@@ -10,6 +10,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowForward
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -35,12 +41,32 @@ fun GroceryListCard(groceryLists: List<GroceryList>) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
-        Text(text = "Grocery lists", style = TextStyle(color = Color.White, fontSize = 25.sp))
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier.fillMaxWidth()
+                .padding(start = 15.dp, end = 15.dp)) {
+            Text(text = "Grocery lists", style = TextStyle(color = Color.White, fontSize = 25.sp))
+            Button(
+                onClick = { /*TODO*/ },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.Transparent,
+                    contentColor = Color.White
+                ),
+                modifier = Modifier.background(color = Color.Transparent)
+            ) {
+                Icon(
+                    Icons.Filled.Add,
+                    contentDescription = "Add button",
+                    tint = Color.White,
+                    modifier = Modifier.background(color = Color.Transparent)
+                )
+            }
+        }
         groceryLists.forEach { list -> GroceryListItemCard(list) }
     }
 }
 
-//TODO: Add the possibility to click on the grocery list to redirect to the grocery list page
 @Composable
 fun GroceryListItemCard(groceryList: GroceryList) {
     Spacer(modifier = Modifier.height(15.dp))
@@ -59,5 +85,20 @@ fun GroceryListItemCard(groceryList: GroceryList) {
                 .weight(1f)
                 .padding(end = 8.dp)
         )
+        Button(
+            onClick = { /*TODO*/ },
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color.Transparent,
+                contentColor = Color.White
+            ),
+            modifier = Modifier.background(color = Color.Transparent)
+        ) {
+            Icon(
+                Icons.Filled.ArrowForward,
+                contentDescription = "Arrow Icon",
+                tint = Color.White,
+                modifier = Modifier.background(color = Color.Transparent)
+            )
+        }
     }
 }

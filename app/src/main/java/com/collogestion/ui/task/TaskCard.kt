@@ -10,8 +10,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -41,7 +46,28 @@ fun TaskCard(tasks: List<Task>) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
-        Text(text = "Tasks", style = TextStyle(color = Color.White, fontSize = 25.sp))
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier.fillMaxWidth()
+                .padding(start = 15.dp, end = 15.dp)) {
+            Text(text = "Tasks", style = TextStyle(color = Color.White, fontSize = 25.sp))
+            Button(
+                onClick = { /*TODO*/ },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.Transparent,
+                    contentColor = Color.White
+                ),
+                modifier = Modifier.background(color = Color.Transparent)
+            ) {
+                Icon(
+                    Icons.Filled.Add,
+                    contentDescription = "Add button",
+                    tint = Color.White,
+                    modifier = Modifier.background(color = Color.Transparent)
+                )
+            }
+        }
         tasks.forEach { item -> TaskItem(item) }
 
     }

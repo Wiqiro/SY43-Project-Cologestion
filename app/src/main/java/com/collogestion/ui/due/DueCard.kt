@@ -10,6 +10,13 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.ArrowForward
+import androidx.compose.material.icons.filled.Clear
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -36,7 +43,28 @@ fun DueCard(dues: List<Due>) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Top
     ) {
-        Text(text = "Dues", style = TextStyle(color = Color.White, fontSize = 25.sp))
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+            modifier = Modifier.fillMaxWidth()
+                .padding(start = 15.dp, end = 15.dp)) {
+            Text(text = "Dues", style = TextStyle(color = Color.White, fontSize = 25.sp))
+            Button(
+                onClick = { /*TODO*/ },
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.Transparent,
+                    contentColor = Color.White
+                ),
+                modifier = Modifier.background(color = Color.Transparent)
+            ) {
+                Icon(
+                    Icons.Filled.Add,
+                    contentDescription = "Add button",
+                    tint = Color.White,
+                    modifier = Modifier.background(color = Color.Transparent)
+                )
+            }
+        }
         dues.forEach { item -> DueItem(item) }
         Spacer(modifier = Modifier.height(15.dp))
         Text(
@@ -71,5 +99,20 @@ fun DueItem(item: Due, userViewModel: UserViewModel = viewModel()) {
                 .weight(1f)
                 .padding(end = 8.dp)
         )
+        Button(
+            onClick = { /*TODO*/ },
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color.Transparent,
+                contentColor = Color.White
+            ),
+            modifier = Modifier.background(color = Color.Transparent)
+        ) {
+            Icon(
+                Icons.Filled.Clear,
+                contentDescription = "Clear Button",
+                tint = Color.White,
+                modifier = Modifier.background(color = Color.Transparent)
+            )
+        }
     }
 }
