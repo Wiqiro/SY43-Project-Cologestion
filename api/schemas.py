@@ -5,7 +5,6 @@ from pydantic import BaseModel, field_validator
 
 class HouseShareBase(BaseModel):
     name: str
-    image: str
 
 
 class HouseShareCreate(HouseShareBase):
@@ -34,7 +33,6 @@ class UserCreate(UserBase):
 
 class User(UserBase):
     id: int
-    profile_picture: Optional[str]
     house_shares: List[HouseShareBase]
 
     class Config:

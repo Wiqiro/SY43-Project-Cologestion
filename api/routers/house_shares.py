@@ -17,7 +17,7 @@ router = APIRouter(prefix="/house_shares", tags=["House Shares"])
 def get_house_share(
     house_share_id: int,
     db: Session = Depends(get_db),
-    current_user_id: str = Depends(get_current_user),
+    current_user_id: int = Depends(get_current_user),
 ):
     try:
         return db.query(models.HouseShare).get(house_share_id)
@@ -31,7 +31,7 @@ def get_house_share(
 def get_user_house_shares(
     user_id: int,
     db: Session = Depends(get_db),
-    current_user_id: str = Depends(get_current_user),
+    current_user_id: int = Depends(get_current_user),
 ):
     try:
         return (
@@ -53,7 +53,7 @@ def get_user_house_shares(
 def add_house_share(
     house_share: schemas.HouseShareCreate,
     db: Session = Depends(get_db),
-    current_user_id: str = Depends(get_current_user),
+    current_user_id: int = Depends(get_current_user),
 ):
     try:
         new_house_share = models.HouseShare(**house_share.model_dump())
@@ -71,7 +71,7 @@ def update_house_share(
     house_share_id: int,
     house_share: schemas.HouseShareCreate,
     db: Session = Depends(get_db),
-    current_user_id: str = Depends(get_current_user),
+    current_user_id: int = Depends(get_current_user),
 ):
     try:
         new_house_share = house_share.model_dump()
@@ -92,7 +92,7 @@ def update_house_share(
 def delete_house_share(
     house_share_id: int,
     db: Session = Depends(get_db),
-    current_user_id: str = Depends(get_current_user),
+    current_user_id: int = Depends(get_current_user),
 ):
     try:
         house_share = db.query(models.HouseShare).get(house_share_id)

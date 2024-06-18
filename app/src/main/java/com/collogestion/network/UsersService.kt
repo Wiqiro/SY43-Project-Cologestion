@@ -3,8 +3,8 @@ package com.collogestion.network
 import com.collogestion.data.User
 
 object UsersService {
-    suspend fun getUser(id: Int): User {
-        val response = HttpClient.getRequest("/users/$id")
+    suspend fun getUser(id: Int? = null): User {
+        val response = HttpClient.getRequest(if (id != null) "/users/$id" else "/users/me")
         return HttpClient.gson.fromJson(response, User::class.java)
     }
 

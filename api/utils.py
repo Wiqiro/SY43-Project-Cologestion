@@ -19,7 +19,7 @@ def create_token(user: schemas.User):
     return jwt.encode(payload, settings.token_secret, algorithm=ALGORITHM)
 
 
-async def get_current_user(token: str = Depends(oauth2_scheme)):
+async def get_current_user(token: str = Depends(oauth2_scheme)) -> int:
     try:
         payload = jwt.decode(token, settings.token_secret, algorithms=[ALGORITHM])
     except jwt.DecodeError:
@@ -28,7 +28,7 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
     user_id = payload.get("user_id")
     if user_id is None:
         raise HTTPException(status_code=401, detail="Invalid token")
-    return user_id
+    return int(user_id)
 
 
 def verify_password(plain_password, hashed_password):

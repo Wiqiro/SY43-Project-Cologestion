@@ -15,7 +15,7 @@ router = APIRouter(prefix="/groceries", tags=["Groceries"])
 def get_user_groceries(
     user_id: int,
     db: Session = Depends(get_db),
-    current_user_id: str = Depends(get_current_user),
+    current_user_id: int = Depends(get_current_user),
 ):
     try:
         return (
@@ -33,7 +33,7 @@ def get_user_groceries(
 def get_house_share_groceries(
     house_share_id: int,
     db: Session = Depends(get_db),
-    current_user_id: str = Depends(get_current_user),
+    current_user_id: int = Depends(get_current_user),
 ):
     try:
         return (
@@ -51,7 +51,7 @@ def get_house_share_groceries(
 def add_grocery(
     grocery_list: schemas.GroceryListCreate,
     db: Session = Depends(get_db),
-    current_user_id: str = Depends(get_current_user),
+    current_user_id: int = Depends(get_current_user),
 ):
     try:
         new_grocery = models.GroceryList(**grocery_list.model_dump())
@@ -67,7 +67,7 @@ def add_grocery(
 def add_grocery_item(
     grocery_item: schemas.GroceryItemCreate,
     db: Session = Depends(get_db),
-    current_user_id: str = Depends(get_current_user),
+    current_user_id: int = Depends(get_current_user),
 ):
     try:
         new_grocery_item = models.GroceryItem(**grocery_item.model_dump())
@@ -84,7 +84,7 @@ def update_grocery(
     grocery_id: int,
     grocery_list: schemas.GroceryListCreate,
     db: Session = Depends(get_db),
-    current_user_id: str = Depends(get_current_user),
+    current_user_id: int = Depends(get_current_user),
 ):
     try:
         new_grocery = grocery_list.model_dump()
@@ -104,7 +104,7 @@ def update_grocery_item(
     grocery_item_id: int,
     grocery_item: schemas.GroceryItemCreate,
     db: Session = Depends(get_db),
-    current_user_id: str = Depends(get_current_user),
+    current_user_id: int = Depends(get_current_user),
 ):
     try:
         new_grocery_item = grocery_item.model_dump()
@@ -125,7 +125,7 @@ def update_grocery_item(
 def delete_grocery(
     grocery_id: int,
     db: Session = Depends(get_db),
-    current_user_id: str = Depends(get_current_user),
+    current_user_id: int = Depends(get_current_user),
 ):
     try:
         grocery = db.query(models.GroceryList).get(grocery_id)
@@ -142,7 +142,7 @@ def delete_grocery(
 def delete_grocery_item(
     grocery_item_id: int,
     db: Session = Depends(get_db),
-    current_user_id: str = Depends(get_current_user),
+    current_user_id: int = Depends(get_current_user),
 ):
     try:
         grocery_item = db.query(models.GroceryItem).get(grocery_item_id)

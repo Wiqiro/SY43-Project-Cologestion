@@ -12,10 +12,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -28,6 +27,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.collogestion.data.HouseShare
 import com.collogestion.ui.theme.ColloGestionTheme
+import com.collogestion.ui.user.UserViewModel
 
 
 @Composable
@@ -57,10 +57,23 @@ fun HouseShareCard(houseShare: HouseShare, onCardClick: () -> Unit) {
 @Composable
 fun HouseShareListScreen(
     navController: NavController,
-    houseShareViewModel: HouseShareViewModel = viewModel()
+    houseShareViewModel: HouseShareViewModel = viewModel(),
+    userViewModel: UserViewModel = viewModel()
 ) {
+    val userUiState by userViewModel.uiState.collectAsState()
     val houseShareUiState by houseShareViewModel.uiState.collectAsState()
-    houseShareViewModel.loadUsersHouseShares(1)
+
+    LaunchedEffect(Unit) {
+        userViewModel.loadUser()
+    }
+
+    LaunchedEffect(userUiState.user) {
+        userUiState.user?.let { user ->
+            houseShareViewModel.loadUsersHouseShares(user.id)
+        }
+    }
+
+
 
 
     ColloGestionTheme {

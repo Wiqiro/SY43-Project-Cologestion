@@ -9,7 +9,6 @@ class HouseShare(Base):
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(100), nullable=False)
     creation_date = Column(Integer, nullable=False)
-    image = Column(String(100))
 
     users = relationship(
         "User",
@@ -101,7 +100,6 @@ class User(Base):
     id = Column(Integer, primary_key=True, index=True)
     first_name = Column(String(100), nullable=False)
     last_name = Column(String(100), nullable=False)
-    profile_picture = Column(String(100))
     email = Column(String(100), unique=True, nullable=False)
     phone = Column(String(14), nullable=False)
     password_hash = Column(String(100), nullable=False)

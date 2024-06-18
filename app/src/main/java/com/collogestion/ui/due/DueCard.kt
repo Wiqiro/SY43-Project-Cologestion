@@ -81,7 +81,7 @@ fun DueCard(dues: List<Due>) {
 }
 
 @Composable
-fun DueItem(item: Due, userViewModel: UserViewModel = viewModel()) {
+fun DueItem(item: Due) {
 
     Spacer(modifier = Modifier.height(15.dp))
     Row(

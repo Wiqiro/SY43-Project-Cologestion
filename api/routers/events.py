@@ -15,7 +15,7 @@ router = APIRouter(prefix="/events", tags=["Events"])
 def get_house_share_events(
     house_share_id: int,
     db: Session = Depends(get_db),
-    current_user_id: str = Depends(get_current_user),
+    current_user_id: int = Depends(get_current_user),
 ):
     try:
         return (
@@ -33,7 +33,7 @@ def get_house_share_events(
 def add_event(
     event: schemas.EventCreate,
     db: Session = Depends(get_db),
-    current_user_id: str = Depends(get_current_user),
+    current_user_id: int = Depends(get_current_user),
 ):
     try:
         new_event = models.Event(**event.model_dump())
@@ -50,7 +50,7 @@ def update_event(
     event_id: int,
     event: schemas.EventCreate,
     db: Session = Depends(get_db),
-    current_user_id: str = Depends(get_current_user),
+    current_user_id: int = Depends(get_current_user),
 ):
     try:
         new_event = event.model_dump()
@@ -67,7 +67,7 @@ def update_event(
 def delete_event(
     event_id: int,
     db: Session = Depends(get_db),
-    current_user_id: str = Depends(get_current_user),
+    current_user_id: int = Depends(get_current_user),
 ):
     try:
         event = db.query(models.Event).get(event_id)

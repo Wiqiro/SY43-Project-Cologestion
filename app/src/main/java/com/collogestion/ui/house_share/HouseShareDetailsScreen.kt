@@ -17,6 +17,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.collogestion.ui.due.DueCard
 import com.collogestion.ui.due.DueViewModel
 import com.collogestion.ui.event.EventCard
@@ -28,6 +29,7 @@ import com.collogestion.ui.task.TaskViewModel
 
 @Composable
 fun HouseShareDetailsScreen(
+    navController: NavController,
     houseShareId: Int,
     houseShareViewModel: HouseShareViewModel = viewModel(),
     groceryViewModel: GroceryViewModel = viewModel(),
@@ -80,7 +82,7 @@ fun HouseShareDetailsScreen(
             text = houseShare?.name ?: "",
             style = TextStyle(color = Color.White, fontSize = 30.sp)
         )
-        GroceryListCard(groceryUiState.groceryLists)
+        GroceryListCard(navController, groceryUiState.groceryLists)
         TaskCard(taskUiState.tasks)
         EventCard(eventUiState.events)
         DueCard(dueUiState.dues)

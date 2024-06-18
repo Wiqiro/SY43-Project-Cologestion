@@ -11,11 +11,23 @@ from utils import get_current_user, get_password_hash
 router = APIRouter(prefix="/users", tags=["Users"])
 
 
+@router.get("/me", response_model=schemas.User)
+def get_me(
+    db: Session = Depends(get_db), current_user_id: int = Depends(get_current_user)
+):
+    try:
+        return db.query(models.User).get(current_user_id)
+    except NoResultFound:
+        raise HTTPException(status_code=404, detail="User not found")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 @router.get("/{user_id}", response_model=schemas.User)
 def get_user(
     user_id: int,
     db: Session = Depends(get_db),
-    current_user_id: str = Depends(get_current_user),
+    current_user_id: int = Depends(get_current_user),
 ):
     try:
         return db.query(models.User).get(user_id)
@@ -29,7 +41,7 @@ def get_user(
 def get_house_share_users(
     house_share_id: int,
     db: Session = Depends(get_db),
-    current_user_id: str = Depends(get_current_user),
+    current_user_id: int = Depends(get_current_user),
 ):
     try:
         return (

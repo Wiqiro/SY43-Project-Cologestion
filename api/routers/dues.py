@@ -15,7 +15,7 @@ router = APIRouter(prefix="/dues", tags=["Dues"])
 async def get_user_dues(
     user_id: int,
     db: Session = Depends(get_db),
-    current_user_id: str = Depends(get_current_user),
+    current_user_id: int = Depends(get_current_user),
 ):
     try:
         return (
@@ -36,7 +36,7 @@ async def get_user_dues(
 def get_house_share_dues(
     house_share_id: int,
     db: Session = Depends(get_db),
-    current_user_id: str = Depends(get_current_user),
+    current_user_id: int = Depends(get_current_user),
 ):
     try:
         return (
@@ -54,7 +54,7 @@ def get_house_share_dues(
 def add_due(
     due: schemas.DueCreate,
     db: Session = Depends(get_db),
-    current_user_id: str = Depends(get_current_user),
+    current_user_id: int = Depends(get_current_user),
 ):
     print(due)
     try:
@@ -77,7 +77,7 @@ def update_due(
     due_id: int,
     due: schemas.DueCreate,
     db: Session = Depends(get_db),
-    current_user_id: str = Depends(get_current_user),
+    current_user_id: int = Depends(get_current_user),
 ):
     try:
         new_due = due.model_dump()
@@ -94,7 +94,7 @@ def update_due(
 def delete_due(
     due_id: int,
     db: Session = Depends(get_db),
-    current_user_id: str = Depends(get_current_user),
+    current_user_id: int = Depends(get_current_user),
 ):
     try:
         due = db.query(models.Due).get(due_id)

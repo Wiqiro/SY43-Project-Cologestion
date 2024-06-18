@@ -1,6 +1,8 @@
 package com.collogestion.ui.user
 
 import android.content.Context
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.collogestion.data.User
@@ -45,17 +47,15 @@ class UserViewModel : ViewModel() {
 
     fun initialize(context: Context) {
         AuthService.initialize(context)
-        setLoggedIn(AuthService.isLoggedIn())
+        //setLoggedIn(AuthService.loggedIn.value)
     }
 
     fun login(email: String, password: String) {
         setLoading(true)
         viewModelScope.launch {
             val result = runCatching { AuthService.login(email, password) }
-            result.onSuccess { response ->
-                if (response != null) {
-                    setLoggedIn(true)
-                }
+            result.onSuccess {
+                setLoggedIn(true)
                 setLoading(false)
             }.onFailure { exception ->
                 setError("Failed to login: ${exception.message}")
@@ -69,10 +69,10 @@ class UserViewModel : ViewModel() {
         setLoggedIn(false)
     }
 
-    fun loadUser(userId: Int) {
+    fun loadUser() {
         setLoading(true)
         viewModelScope.launch {
-            val result = runCatching { UsersService.getUser(userId) }
+            val result = runCatching { UsersService.getUser() }
             result.onSuccess { user ->
                 setUser(user)
                 setLoading(false)

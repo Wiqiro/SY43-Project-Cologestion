@@ -4,12 +4,15 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.collogestion.data.Token
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.withContext
 import okhttp3.FormBody
 
 object AuthService {
     private lateinit var sharedPreferences: SharedPreferences
-    private var loggedIn = false
+    private var _loggedIn = MutableStateFlow(false)
+
 
     fun initialize(context: Context) {
         sharedPreferences = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
@@ -17,36 +20,38 @@ object AuthService {
         val token = getToken()
         if (token != null) {
             HttpClient.setToken(token)
-            loggedIn = true
+            _loggedIn.value = true
         }
     }
 
-    fun isLoggedIn(): Boolean {
-        return loggedIn
-    }
+    val loggedIn: Flow<Boolean> = _loggedIn
 
-    suspend fun login(email: String, password: String): String {
+    val isLoggedIn: Boolean
+        get() = _loggedIn.value
+
+    suspend fun login(email: String, password: String) {
         return withContext(Dispatchers.IO) {
-            val response = HttpClient.postRequest(
-                "/auth/token", FormBody.Builder()
-                    .add("username", email)
-                    .add("password", password)
-                    .build()
-            )
-            response.let {
-                val token = HttpClient.gson.fromJson(it, Token::class.java)
+            try {
+                val response = HttpClient.postRequest(
+                    "/auth/token", FormBody.Builder()
+                        .add("username", email)
+                        .add("password", password)
+                        .build()
+                )
+                val token = HttpClient.gson.fromJson(response, Token::class.java)
                 HttpClient.setToken(token.access_token)
                 saveToken(token.access_token)
-                loggedIn = true
+                _loggedIn.value = true
+            } catch (e: Exception) {
+                _loggedIn.value = false
             }
-            response
         }
     }
 
     fun logout() {
         sharedPreferences.edit().remove("token").apply()
         HttpClient.removeToken()
-        loggedIn = false
+        _loggedIn.value = false
     }
 
     private fun saveToken(token: String) {

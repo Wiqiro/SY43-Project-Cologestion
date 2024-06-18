@@ -18,6 +18,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.SegmentedButton
@@ -26,6 +27,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -45,14 +48,22 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.collogestion.R
+import com.collogestion.network.AuthService
 
 
 @SuppressLint("ResourceAsColor")
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 @Preview
-fun ProfileScreen() {
+fun ProfileScreen(userViewModel: UserViewModel = viewModel()) {
+    val userUiState by userViewModel.uiState.collectAsState()
+
+    LaunchedEffect(Unit) {
+        userViewModel.loadUser()
+    }
+
     Surface(
         modifier = Modifier
             .fillMaxWidth()
@@ -88,24 +99,28 @@ fun ProfileScreen() {
                         )
                         Spacer(modifier = Modifier.width(20.dp))
                         Text(
-                            text = "UserName",
+                            text = "${userUiState.user?.firstname} ${userUiState.user?.lastname}",
                             style = TextStyle(color = Color.White, fontSize = 30.sp)
                         )
                     }
                     Spacer(modifier = Modifier.height(10.dp))
                     Text(
-                        text = stringResource(id = R.string.number_of_project),
+                        text = "Email: ${userUiState.user?.mail}",
                         style = TextStyle(color = Color.LightGray, fontSize = 20.sp)
                     )
                     Text(
-                        text = stringResource(id = R.string.total_spending),
+                        text = "Phone: ${userUiState.user?.phone}",
                         style = TextStyle(color = Color.LightGray, fontSize = 20.sp)
                     )
                     Text(
-                        text = stringResource(id = R.string.number_of_realised_task),
+                        text = "Total dues: ?",
                         style = TextStyle(color = Color.LightGray, fontSize = 20.sp)
                     )
                 }
+            }
+            Spacer(modifier = Modifier.height(15.dp))
+            Button(onClick = { AuthService.logout() }) {
+                
             }
             Spacer(modifier = Modifier.height(15.dp))
             Row(

@@ -26,11 +26,10 @@ fun PersonalDashboardScreen(
     dueViewModel: DueViewModel = viewModel()
 ) {
     val userUiState by userViewModel.uiState.collectAsState()
-
-    //TODO: remove and make model passed by parent
     LaunchedEffect(Unit) {
-        userViewModel.loadUser(1)
+        userViewModel.loadUser()
     }
+
 
     val userId: Int = userUiState.user?.id ?: return
 

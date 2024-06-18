@@ -26,10 +26,14 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.collogestion.data.GroceryList
 
 @Composable
-fun GroceryListCard(groceryLists: List<GroceryList>) {
+fun GroceryListCard(
+    navController: NavController,
+    groceryLists: List<GroceryList>,
+) {
     Spacer(modifier = Modifier.height(15.dp))
     Column(
         modifier =
@@ -44,8 +48,10 @@ fun GroceryListCard(groceryLists: List<GroceryList>) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier.fillMaxWidth()
-                .padding(start = 15.dp, end = 15.dp)) {
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 15.dp, end = 15.dp)
+        ) {
             Text(text = "Grocery lists", style = TextStyle(color = Color.White, fontSize = 25.sp))
             Button(
                 onClick = { /*TODO*/ },
@@ -63,12 +69,14 @@ fun GroceryListCard(groceryLists: List<GroceryList>) {
                 )
             }
         }
-        groceryLists.forEach { list -> GroceryListItemCard(list) }
+        groceryLists.forEach {
+            GroceryListItemCard(it) { navController.navigate("house_share_details/grocery/${it.id}") }
+        }
     }
 }
 
 @Composable
-fun GroceryListItemCard(groceryList: GroceryList) {
+fun GroceryListItemCard(groceryList: GroceryList, onClick: () -> Unit) {
     Spacer(modifier = Modifier.height(15.dp))
     Row(
         modifier = Modifier
@@ -86,7 +94,7 @@ fun GroceryListItemCard(groceryList: GroceryList) {
                 .padding(end = 8.dp)
         )
         Button(
-            onClick = { /*TODO*/ },
+            onClick = onClick,
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color.Transparent,
                 contentColor = Color.White

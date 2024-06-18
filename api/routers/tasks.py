@@ -15,7 +15,7 @@ router = APIRouter(prefix="/tasks", tags=["Tasks"])
 def get_user_tasks(
     user_id: int,
     db: Session = Depends(get_db),
-    current_user_id: str = Depends(get_current_user),
+    current_user_id: int = Depends(get_current_user),
 ):
     try:
         return db.query(models.Task).filter(models.Task.assignee_id == user_id).all()
@@ -29,7 +29,7 @@ def get_user_tasks(
 def get_house_share_tasks(
     house_share_id: int,
     db: Session = Depends(get_db),
-    current_user_id: str = Depends(get_current_user),
+    current_user_id: int = Depends(get_current_user),
 ):
     try:
         return (
@@ -47,7 +47,7 @@ def get_house_share_tasks(
 def add_task(
     task: schemas.TaskCreate,
     db: Session = Depends(get_db),
-    current_user_id: str = Depends(get_current_user),
+    current_user_id: int = Depends(get_current_user),
 ):
     try:
         new_task = models.Task(**task.model_dump())
@@ -64,7 +64,7 @@ def update_task(
     task_id: int,
     task: schemas.TaskCreate,
     db: Session = Depends(get_db),
-    current_user_id: str = Depends(get_current_user),
+    current_user_id: int = Depends(get_current_user),
 ):
     try:
         new_task = task.model_dump()
@@ -81,7 +81,7 @@ def update_task(
 def delete_task(
     task_id: int,
     db: Session = Depends(get_db),
-    current_user_id: str = Depends(get_current_user),
+    current_user_id: int = Depends(get_current_user),
 ):
     try:
         task = db.query(models.Task).get(task_id)
