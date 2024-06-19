@@ -11,24 +11,6 @@ from utils import get_current_user
 router = APIRouter(prefix="/groceries", tags=["Groceries"])
 
 
-@router.get("/user/{user_id}", response_model=List[schemas.GroceryList])
-def get_user_groceries(
-    user_id: int,
-    db: Session = Depends(get_db),
-    current_user_id: int = Depends(get_current_user),
-):
-    try:
-        return (
-            db.query(models.GroceryList)
-            .filter(models.GroceryList.assignee_id == user_id)
-            .all()
-        )
-    except NoResultFound:
-        raise HTTPException(status_code=404, detail="User not found")
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=str(e))
-
-
 @router.get("/house_share/{house_share_id}", response_model=List[schemas.GroceryList])
 def get_house_share_groceries(
     house_share_id: int,

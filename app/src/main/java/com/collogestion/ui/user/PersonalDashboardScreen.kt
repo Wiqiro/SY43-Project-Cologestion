@@ -52,6 +52,6 @@ fun PersonalDashboardScreen(
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
         TaskCard(taskUiState.tasks)
-        DueCard(dueUiState.dues)
+        DueCard(dues = dueUiState.dues, dueViewModel= dueViewModel)
     }
 }

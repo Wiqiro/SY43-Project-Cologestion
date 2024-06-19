@@ -1,6 +1,8 @@
 package com.collogestion.network
 
+import android.util.Log
 import com.collogestion.data.Event
+import java.time.LocalDateTime
 import java.util.Date
 
 object EventsService {
@@ -13,11 +15,12 @@ object EventsService {
         date: Date, title: String, duration: Int, houseShareId: Int
     ): Event {
         val body = mapOf(
-            "date" to date,
             "title" to title,
+            "date" to date.time / 1000,
             "duration" to duration,
             "house_share_id" to houseShareId
         )
+        Log.d("EventsService", "addEvent: $body")
         val response = HttpClient.postRequest("/events", body)
         return HttpClient.gson.fromJson(response, Event::class.java)
     }

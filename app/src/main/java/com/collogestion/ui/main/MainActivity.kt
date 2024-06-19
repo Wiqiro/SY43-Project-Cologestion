@@ -28,15 +28,17 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.collogestion.network.AuthService
+import com.collogestion.ui.due.DueFormScreen
 import com.collogestion.ui.due.DueViewModel
+import com.collogestion.ui.event.EventFormScreen
 import com.collogestion.ui.event.EventViewModel
+import com.collogestion.ui.grocery.GroceryListFormScreen
 import com.collogestion.ui.grocery.GroceryListScreen
 import com.collogestion.ui.grocery.GroceryViewModel
 import com.collogestion.ui.house_share.HouseShareDetailsScreen
@@ -48,7 +50,6 @@ import com.collogestion.ui.user.LoginScreen
 import com.collogestion.ui.user.PersonalDashboardScreen
 import com.collogestion.ui.user.ProfileScreen
 import com.collogestion.ui.user.UserViewModel
-import kotlinx.coroutines.launch
 
 
 class MainActivity : ComponentActivity() {
@@ -222,6 +223,15 @@ fun LoggedInContent() {
                 )
             }
             composable("profile") { ProfileScreen() }
+            composable("house_share_details/add_due") {
+                DueFormScreen(navController, houseShareViewModel, dueViewModel)
+            }
+            composable("house_share_details/add_event") {
+                EventFormScreen(navController, houseShareViewModel, eventViewModel)
+            }
+            composable("house_share_details/add_grocery") {
+                GroceryListFormScreen(navController, houseShareViewModel, groceryViewModel)
+            }
 
         }
     }

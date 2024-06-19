@@ -54,7 +54,7 @@ fun GroceryListCard(
         ) {
             Text(text = "Grocery lists", style = TextStyle(color = Color.White, fontSize = 25.sp))
             Button(
-                onClick = { /*TODO*/ },
+                onClick = { navController.navigate("house_share_details/add_grocery") },
                 colors = ButtonDefaults.buttonColors(
                     containerColor = Color.Transparent,
                     contentColor = Color.White

@@ -1,5 +1,6 @@
 package com.collogestion.network
 
+import android.util.Log
 import com.collogestion.data.Due
 
 object DuesService {
@@ -13,9 +14,10 @@ object DuesService {
         return HttpClient.gson.fromJson(response, Array<Due>::class.java).toList()
     }
 
-    suspend fun addDue(amount: Double, creditorId: Int, debtorId: Int, houseShareId: Int): Due {
+    suspend fun addDue(title: String, amount: Double, creditorId: Int, debtorId: Int, houseShareId: Int): Due {
         val data = mapOf(
             "amount" to amount,
+            "title" to title,
             "creditor_id" to creditorId,
             "debtor_id" to debtorId,
             "house_share_id" to houseShareId

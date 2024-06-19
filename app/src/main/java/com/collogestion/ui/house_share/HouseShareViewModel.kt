@@ -11,7 +11,6 @@ import kotlinx.coroutines.launch
 
 data class HouseShareUiState(
     val houseShares: List<HouseShare> = emptyList(),
-    val selectedHouseShareId: Int? = null,
     val selectedHouseShare: HouseShare? = null,
     val isLoading: Boolean = false,
     val errorMessage: String? = null
@@ -109,14 +108,6 @@ class HouseShareViewModel : ViewModel() {
                 setLoading(false)
             }
         }
-    }
-
-    fun selectHouseShare(houseShareId: Int) {
-        val selectedHouseShare = _uiState.value.houseShares.find { it.id == houseShareId }
-        _uiState.value = _uiState.value.copy(
-            selectedHouseShareId = houseShareId,
-            selectedHouseShare = selectedHouseShare
-        )
     }
 
     fun clearError() {

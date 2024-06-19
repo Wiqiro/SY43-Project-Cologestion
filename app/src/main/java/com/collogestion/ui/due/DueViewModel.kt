@@ -12,7 +12,6 @@ import kotlinx.coroutines.launch
 data class DueUiState(
     val dues: List<Due> = emptyList(),
     val selectedDueId: Int? = null,
-    val selectedDue: Due? = null,
     val isLoading: Boolean = false,
     val errorMessage: String? = null
 )
@@ -33,9 +32,6 @@ class DueViewModel : ViewModel() {
         _uiState.value = _uiState.value.copy(dues = dues)
     }
 
-    private fun setSelectedDue(due: Due?) {
-        _uiState.value = _uiState.value.copy(selectedDue = due)
-    }
 
     fun loadHouseShareDues(houseShareId: Int) {
         setLoading(true)
@@ -65,11 +61,19 @@ class DueViewModel : ViewModel() {
         }
     }
 
-    fun addDue(amount: Double, creditorId: Int, debtorId: Int, houseShareId: Int) {
+    fun addDue(title: String, amount: Double, creditorId: Int, debtorId: Int, houseShareId: Int) {
         setLoading(true)
         viewModelScope.launch {
             val result =
-                runCatching { DuesService.addDue(amount, creditorId, debtorId, houseShareId) }
+                runCatching {
+                    DuesService.addDue(
+                        title,
+                        amount,
+                        creditorId,
+                        debtorId,
+                        houseShareId
+                    )
+                }
             result.onSuccess { newDue ->
                 setDues(_uiState.value.dues + newDue)
                 setLoading(false)
@@ -123,7 +127,6 @@ class DueViewModel : ViewModel() {
         val selectedDue = _uiState.value.dues.find { it.id == dueId }
         _uiState.value = _uiState.value.copy(
             selectedDueId = dueId,
-            selectedDue = selectedDue
         )
     }
 

@@ -16,13 +16,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
-import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.SegmentedButton
-import androidx.compose.material3.SingleChoiceSegmentedButtonRow
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -30,9 +26,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -41,24 +35,32 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.collogestion.R
 import com.collogestion.network.AuthService
+import com.collogestion.network.UsersService
+import kotlinx.coroutines.launch
 
 
 @SuppressLint("ResourceAsColor")
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 @Preview
 fun ProfileScreen(userViewModel: UserViewModel = viewModel()) {
     val userUiState by userViewModel.uiState.collectAsState()
+
+    var oldPasswordText by rememberSaveable { mutableStateOf("") }
+    var newPasswordText by rememberSaveable { mutableStateOf("") }
+
+    var passwordChangeError: Boolean by rememberSaveable { mutableStateOf(false) }
+
+    val lifecycleScope = LocalLifecycleOwner.current.lifecycleScope
 
     LaunchedEffect(Unit) {
         userViewModel.loadUser()
@@ -113,111 +115,44 @@ fun ProfileScreen(userViewModel: UserViewModel = viewModel()) {
                         style = TextStyle(color = Color.LightGray, fontSize = 20.sp)
                     )
                     Text(
-                        text = "Total dues: ?",
+                        text = "House shares: ${userUiState.user?.houseShares?.size}",
                         style = TextStyle(color = Color.LightGray, fontSize = 20.sp)
                     )
                 }
             }
-            Spacer(modifier = Modifier.height(15.dp))
-            Button(onClick = { AuthService.logout() }) {
-                
-            }
-            Spacer(modifier = Modifier.height(15.dp))
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(25.dp),
-                horizontalArrangement = Arrangement.Center
-            ) {
-                Text(
-                    text = stringResource(id = R.string.theme),
-                    style = TextStyle(color = Color.White, fontSize = 20.sp)
-                )
-            }
-            Spacer(modifier = Modifier.height(10.dp))
-            Card(
-                modifier = Modifier
-                    .background(color = Color.Transparent)
-                    .fillMaxWidth()
-            ) {
-                var selectedIndex by remember { mutableIntStateOf(0) }
-                val options =
-                    listOf(stringResource(id = R.string.dark), stringResource(id = R.string.light))
-                SingleChoiceSegmentedButtonRow(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(color = Color(0xFF211F26))
-                ) {
-                    options.forEachIndexed { index, label ->
-                        SegmentedButton(
-                            modifier = Modifier.padding(15.dp),
-                            shape = CircleShape,
-                            onClick = { selectedIndex = index },
-                            selected = index == selectedIndex
-                        ) {
-                            Text(label)
-                        }
-                    }
-                }
 
-            }
             Spacer(modifier = Modifier.height(15.dp))
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(25.dp),
-                horizontalArrangement = Arrangement.Center
-            ) {
-                Text(
-                    text = stringResource(id = R.string.notifications),
-                    style = TextStyle(color = Color.White, fontSize = 20.sp)
-                )
+
+            Button(onClick = { AuthService.logout() }) {
+                Text("Logout")
             }
-            Spacer(modifier = Modifier.height(10.dp))
+
+            Spacer(modifier = Modifier.height(50.dp))
+
+            Text("Change password", style = TextStyle(color = Color.White, fontSize = 20.sp))
+
+            Spacer(modifier = Modifier.height(15.dp))
+
             Card(
                 modifier = Modifier
-                    .background(color = Color.Transparent)
+                    .background(color = Color.Black)
+                    .border(
+                        BorderStroke(width = 0.dp, color = Color(0xFF211F26)),
+                    )
                     .fillMaxWidth()
             ) {
-                var indexSelected by remember { mutableIntStateOf(0) }
-                val choices = listOf(
-                    stringResource(id = R.string.activated),
-                    stringResource(id = R.string.deactivated)
-                )
-                SingleChoiceSegmentedButtonRow(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(color = Color(0xFF211F26))
-                ) {
-                    choices.forEachIndexed { index, label ->
-                        SegmentedButton(
-                            modifier = Modifier.padding(15.dp),
-                            shape = CircleShape,
-                            onClick = { indexSelected = index },
-                            selected = index == indexSelected
-                        ) {
-                            Text(label)
-                        }
-                    }
+                Column {
+                    TextField(
+                        value = oldPasswordText,
+                        onValueChange = { oldPasswordText = it },
+                        label = { Text("Old password") },
+                    )
+
                 }
             }
-            Spacer(modifier = Modifier.height(50.dp))
-            Card(
-                modifier = Modifier
-                    .background(color = Color.Black)
-                    .border(
-                        BorderStroke(width = 0.dp, color = Color(0xFF211F26)),
-                    )
-                    .fillMaxWidth()
-            ) {
-                var emailText by rememberSaveable { mutableStateOf("") }
-                TextField(value = emailText,
-                    onValueChange = { emailText = it },
-                    label = { Text(stringResource(id = R.string.email)) },
-//                        readOnly = true,
-                    placeholder = { Text(stringResource(id = R.string.email_placeholder)) })
-            }
+
             Spacer(modifier = Modifier.height(15.dp))
+
             Card(
                 modifier = Modifier
                     .background(color = Color.Black)
@@ -226,13 +161,37 @@ fun ProfileScreen(userViewModel: UserViewModel = viewModel()) {
                     )
                     .fillMaxWidth()
             ) {
-                var phoneText by rememberSaveable { mutableStateOf("") }
-                TextField(value = phoneText,
-                    onValueChange = { phoneText = it },
-                    label = { Text(stringResource(id = R.string.phone)) },
-                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                    placeholder = { Text(stringResource(id = R.string.phone_placeholder)) })
+                Column {
+                    TextField(
+                        value = newPasswordText,
+                        onValueChange = { newPasswordText = it },
+                        label = { Text("New password") },
+                    )
+                }
             }
+
+            if (passwordChangeError) {
+                Spacer(modifier = Modifier.height(15.dp))
+                Text("Failed to change password", color = Color.Red)
+            }
+
+            Spacer(modifier = Modifier.height(15.dp))
+
+            Button(onClick = {
+                lifecycleScope.launch {
+                    val success = UsersService.changePassword(newPasswordText, oldPasswordText)
+                    if (!success) passwordChangeError = true
+                    else {
+                        oldPasswordText = ""
+                        newPasswordText = ""
+                        passwordChangeError = false
+                    }
+                }
+            }) {
+                Text("Change password")
+            }
+
+
         }
     }
 }

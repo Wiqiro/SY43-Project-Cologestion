@@ -26,13 +26,20 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.collogestion.data.Event
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
 @Composable
-fun EventCard(events: List<Event>) {
+fun EventCard(
+    navController: NavController? = null,
+    houseShareId: Int? = null,
+    events: List<Event>,
+    eventViewModel: EventViewModel = viewModel()
+) {
     Spacer(modifier = Modifier.height(15.dp))
     Column(
         modifier =
@@ -47,23 +54,27 @@ fun EventCard(events: List<Event>) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier.fillMaxWidth()
-                .padding(start = 15.dp, end = 15.dp)) {
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 15.dp, end = 15.dp)
+        ) {
             Text(text = "Events", style = TextStyle(color = Color.White, fontSize = 25.sp))
-            Button(
-                onClick = { /*TODO*/ },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.Transparent,
-                    contentColor = Color.White
-                ),
-                modifier = Modifier.background(color = Color.Transparent)
-            ) {
-                Icon(
-                    Icons.Filled.Add,
-                    contentDescription = "Add button",
-                    tint = Color.White,
+            if (navController != null && houseShareId != null) {
+                Button(
+                    onClick = { navController.navigate("house_share_details/add_event") },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.Transparent,
+                        contentColor = Color.White
+                    ),
                     modifier = Modifier.background(color = Color.Transparent)
-                )
+                ) {
+                    Icon(
+                        Icons.Filled.Add,
+                        contentDescription = "Add button",
+                        tint = Color.White,
+                        modifier = Modifier.background(color = Color.Transparent)
+                    )
+                }
             }
         }
         events.forEach { item -> EventItem(item) }
@@ -74,7 +85,7 @@ fun EventCard(events: List<Event>) {
 @Composable
 fun EventItem(item: Event) {
     val sdf = SimpleDateFormat("dd-MM-yy HH:mm", Locale.getDefault())
-    val formattedDate = sdf.format(Date(item.date.toLong()))
+    val formattedDate = sdf.format(item.date)
 
     Spacer(modifier = Modifier.height(15.dp))
     Row(

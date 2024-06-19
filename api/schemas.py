@@ -14,7 +14,7 @@ class HouseShareCreate(HouseShareBase):
 class HouseShare(HouseShareBase):
     id: int
     creation_date: int
-    users: List["UserBase"]
+    users: List["UserBaseWithId"]
 
     class Config:
         from_attributes = True
@@ -27,16 +27,25 @@ class UserBase(BaseModel):
     phone: str
 
 
+class UserBaseWithId(UserBase):
+    id: int
+
+
 class UserCreate(UserBase):
     password: str
 
 
 class User(UserBase):
     id: int
-    house_shares: List[HouseShareBase]
+    house_shares: List[HouseShare]
 
     class Config:
         from_attributes = True
+
+
+class UserPasswordChange(BaseModel):
+    new_password: str
+    old_password: str
 
 
 class Token(BaseModel):
@@ -70,9 +79,6 @@ class DueBase(BaseModel):
     debtor_id: int
     house_share_id: int
 
-    debtor_name: str
-    creditor_name: str
-
 
 class DueCreate(DueBase):
     pass
@@ -80,6 +86,9 @@ class DueCreate(DueBase):
 
 class Due(DueBase):
     id: int
+
+    debtor_name: str
+    creditor_name: str
 
     class Config:
         from_attributes = True
@@ -106,7 +115,7 @@ class Event(EventBase):
 class GroceryItemBase(BaseModel):
     name: str
     quantity: int
-    bought: bool
+    bought: bool = False
 
 
 class GroceryItemCreate(GroceryItemBase):

@@ -12,7 +12,6 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.filled.Clear
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -28,11 +27,16 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavController
 import com.collogestion.data.Due
-import com.collogestion.ui.user.UserViewModel
 
 @Composable
-fun DueCard(dues: List<Due>) {
+fun DueCard(
+    navController: NavController? = null,
+    houseShareId: Int? = null,
+    dues: List<Due>,
+    dueViewModel: DueViewModel = viewModel()
+) {
     Spacer(modifier = Modifier.height(15.dp))
     Column(
         modifier = Modifier
@@ -46,26 +50,30 @@ fun DueCard(dues: List<Due>) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier.fillMaxWidth()
-                .padding(start = 15.dp, end = 15.dp)) {
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 15.dp, end = 15.dp)
+        ) {
             Text(text = "Dues", style = TextStyle(color = Color.White, fontSize = 25.sp))
-            Button(
-                onClick = { /*TODO*/ },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.Transparent,
-                    contentColor = Color.White
-                ),
-                modifier = Modifier.background(color = Color.Transparent)
-            ) {
-                Icon(
-                    Icons.Filled.Add,
-                    contentDescription = "Add button",
-                    tint = Color.White,
+            if (navController != null && houseShareId != null) {
+                Button(
+                    onClick = { navController.navigate("house_share_details/add_due") },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.Transparent,
+                        contentColor = Color.White
+                    ),
                     modifier = Modifier.background(color = Color.Transparent)
-                )
+                ) {
+                    Icon(
+                        Icons.Filled.Add,
+                        contentDescription = "Add button",
+                        tint = Color.White,
+                        modifier = Modifier.background(color = Color.Transparent)
+                    )
+                }
             }
         }
-        dues.forEach { item -> DueItem(item) }
+        dues.forEach { item -> DueItem(item, dueViewModel) }
         Spacer(modifier = Modifier.height(15.dp))
         Text(
             text = "My total spending = 35€",
@@ -81,8 +89,7 @@ fun DueCard(dues: List<Due>) {
 }
 
 @Composable
-fun DueItem(item: Due) {
-
+fun DueItem(item: Due, dueViewModel: DueViewModel = viewModel()) {
     Spacer(modifier = Modifier.height(15.dp))
     Row(
         modifier = Modifier
@@ -100,7 +107,7 @@ fun DueItem(item: Due) {
                 .padding(end = 8.dp)
         )
         Button(
-            onClick = { /*TODO*/ },
+            onClick = { dueViewModel.deleteDue(item.id) },
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color.Transparent,
                 contentColor = Color.White

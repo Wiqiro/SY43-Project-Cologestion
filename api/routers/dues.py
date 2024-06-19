@@ -7,6 +7,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from requests import Session
 from sqlalchemy.orm.exc import NoResultFound
 from utils import get_current_user
+from sqlalchemy.orm import joinedload
 
 router = APIRouter(prefix="/dues", tags=["Dues"])
 
@@ -97,7 +98,13 @@ def delete_due(
     current_user_id: int = Depends(get_current_user),
 ):
     try:
-        due = db.query(models.Due).get(due_id)
+        due = (
+            db.query(models.Due)
+            .options(joinedload(models.Due.debtor), joinedload(models.Due.creditor))
+            .get(due_id)
+        )
+        if not due:
+            raise HTTPException(status_code=404, detail="Due not found")
         db.delete(due)
         db.commit()
         return due

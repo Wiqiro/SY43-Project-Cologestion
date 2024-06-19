@@ -6,7 +6,7 @@ from database import get_db
 from fastapi import APIRouter, Depends, HTTPException
 from requests import Session
 from sqlalchemy.orm.exc import NoResultFound
-from utils import get_current_user, get_password_hash
+from utils import get_current_user, get_password_hash, verify_password
 
 router = APIRouter(prefix="/users", tags=["Users"])
 
@@ -69,5 +69,21 @@ def add_user(user: schemas.UserCreate, db: Session = Depends(get_db)):
         db.commit()
         db.refresh(new_user)
         return new_user
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.put("/me/password")
+def change_password(
+    passwords: schemas.UserPasswordChange,
+    db: Session = Depends(get_db),
+    current_user_id: int = Depends(get_current_user),
+):
+    try:
+        user = db.query(models.User).get(current_user_id)
+        if not verify_password(passwords.old_password, user.password_hash):
+            raise HTTPException(status_code=401, detail="Incorrect password")
+        user.password_hash = get_password_hash(passwords.new_password)
+        db.commit()
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

@@ -11,7 +11,6 @@ import kotlinx.coroutines.launch
 
 data class GroceryUiState(
     val groceryLists: List<GroceryList> = emptyList(),
-    val selectedGroceryListId: Int? = null,
     val selectedGroceryList: GroceryList? = null,
     val isLoading: Boolean = false,
     val errorMessage: String? = null
@@ -32,6 +31,7 @@ class GroceryViewModel : ViewModel() {
     private fun setGroceryLists(groceryLists: List<GroceryList>) {
         _uiState.value = _uiState.value.copy(groceryLists = groceryLists)
     }
+
 
     private fun setSelectedGroceryList(groceryList: GroceryList?) {
         _uiState.value = _uiState.value.copy(selectedGroceryList = groceryList)
@@ -65,11 +65,11 @@ class GroceryViewModel : ViewModel() {
         }
     }
 
-    fun addGroceryList(name: String, assigneeId: Int, houseShareId: Int) {
+    fun addGroceryList(name: String, houseShareId: Int) {
         setLoading(true)
         viewModelScope.launch {
             val result =
-                runCatching { GroceriesService.addGroceryList(name, assigneeId, houseShareId) }
+                runCatching { GroceriesService.addGroceryList(name, houseShareId) }
             result.onSuccess { newGroceryList ->
                 setGroceryLists(_uiState.value.groceryLists + newGroceryList)
                 setLoading(false)
@@ -80,7 +80,60 @@ class GroceryViewModel : ViewModel() {
         }
     }
 
-    fun editGroceryList(groceryListId: Int, name: String, assigneeId: Int, houseShareId: Int) {
+    fun addGroceryItem(groceryListId: Int, name: String, quantity: Int) {
+        setLoading(true)
+        viewModelScope.launch {
+            val result = runCatching {
+                GroceriesService.addGroceryItem(groceryListId, name, quantity)
+            }
+            result.onSuccess { newGroceryItem ->
+                val updatedList = _uiState.value.groceryLists.map { groceryList ->
+                    if (groceryList.id == groceryListId) {
+                        GroceryList(
+                            groceryList.id,
+                            groceryList.name,
+                            groceryList.houseShareId,
+                            groceryList.items + newGroceryItem
+                        )
+                    } else {
+                        groceryList
+                    }
+                }
+                setGroceryLists(updatedList)
+                setLoading(false)
+            }.onFailure { exception ->
+                setError("Failed to add grocery item: ${exception.message}")
+                setLoading(false)
+            }
+        }
+    }
+
+    fun deleteGroceryItem(groceryItemId: Int) {
+        setLoading(true)
+        viewModelScope.launch {
+            val result = runCatching { GroceriesService.deleteGroceryItem(groceryItemId) }
+            result.onSuccess {
+                val updatedList = _uiState.value.groceryLists.map { groceryList ->
+                    val updatedItems = groceryList.items.filter { it.id != groceryItemId }
+                    GroceryList(
+                        groceryList.id,
+                        groceryList.name,
+                        groceryList.houseShareId,
+                        updatedItems
+                    )
+                }
+                setGroceryLists(updatedList)
+                setLoading(false)
+            }
+        }
+    }
+
+    fun editGroceryList(
+        groceryListId: Int,
+        name: String,
+        assigneeId: Int,
+        houseShareId: Int
+    ) {
         setLoading(true)
         viewModelScope.launch {
             val result = runCatching {
@@ -119,9 +172,9 @@ class GroceryViewModel : ViewModel() {
     }
 
     fun selectGroceryList(groceryListId: Int) {
-        val selectedGroceryList = _uiState.value.groceryLists.find { it.id == groceryListId }
+        val selectedGroceryList =
+            _uiState.value.groceryLists.find { it.id == groceryListId }
         _uiState.value = _uiState.value.copy(
-            selectedGroceryListId = groceryListId,
             selectedGroceryList = selectedGroceryList
         )
     }

@@ -84,8 +84,8 @@ fun HouseShareDetailsScreen(
         )
         GroceryListCard(navController, groceryUiState.groceryLists)
         TaskCard(taskUiState.tasks)
-        EventCard(eventUiState.events)
-        DueCard(dueUiState.dues)
+        EventCard(navController, houseShareId, eventUiState.events, eventViewModel)
+        DueCard(navController, houseShareId, dueUiState.dues, dueViewModel)
     }
 }
 
