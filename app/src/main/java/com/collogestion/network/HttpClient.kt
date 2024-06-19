@@ -80,4 +80,16 @@ object HttpClient {
             throw e
         }
     }
+
+    suspend fun isApiReachable(): Boolean = withContext(Dispatchers.IO) {
+        val request = createRequestBuilder("/docs").get().build()
+        try {
+            client.newCall(request).execute().use { response ->
+                return@withContext response.isSuccessful
+            }
+        } catch (e: IOException) {
+            Log.e("HttpClient", "Error: ${e.message}")
+            return@withContext false
+        }
+    }
 }

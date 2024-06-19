@@ -66,6 +66,7 @@ def update_task(
     db: Session = Depends(get_db),
     current_user_id: int = Depends(get_current_user),
 ):
+    print(task)
     try:
         new_task = task.model_dump()
         updated_rows = db.query(models.Task).filter_by(id=task_id).update(new_task)

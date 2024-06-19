@@ -45,6 +45,7 @@ class EventViewModel : ViewModel() {
             result.onSuccess { events ->
                 setEvents(events)
                 setLoading(false)
+                setError(null)
             }.onFailure { exception ->
                 setError("Failed to load house share events: ${exception.message}")
                 setLoading(false)
@@ -59,6 +60,7 @@ class EventViewModel : ViewModel() {
             result.onSuccess { newEvent ->
                 setEvents(_uiState.value.events + newEvent)
                 setLoading(false)
+                setError(null)
             }.onFailure { exception ->
                 setError("Failed to add event: ${exception.message}")
                 setLoading(false)
@@ -84,6 +86,7 @@ class EventViewModel : ViewModel() {
                 }
                 setEvents(updatedList)
                 setLoading(false)
+                setError(null)
             }.onFailure { exception ->
                 setError("Failed to edit event: ${exception.message}")
                 setLoading(false)
@@ -98,6 +101,7 @@ class EventViewModel : ViewModel() {
             result.onSuccess {
                 setEvents(_uiState.value.events.filter { it.id != eventId })
                 setLoading(false)
+                setError(null)
             }.onFailure { exception ->
                 setError("Failed to delete event: ${exception.message}")
                 setLoading(false)
@@ -111,9 +115,5 @@ class EventViewModel : ViewModel() {
             selectedEventId = eventId,
             selectedEvent = selectedEvent
         )
-    }
-
-    fun clearError() {
-        setError(null)
     }
 }

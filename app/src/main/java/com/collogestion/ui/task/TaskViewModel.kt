@@ -44,6 +44,7 @@ class TaskViewModel : ViewModel() {
             result.onSuccess { tasks ->
                 setTasks(tasks)
                 setLoading(false)
+                setError(null)
             }.onFailure { exception ->
                 setError("Failed to load user tasks: ${exception.message}")
                 setLoading(false)
@@ -58,6 +59,7 @@ class TaskViewModel : ViewModel() {
             result.onSuccess { tasks ->
                 setTasks(tasks)
                 setLoading(false)
+                setError(null)
             }.onFailure { exception ->
                 setError("Failed to load house share tasks: ${exception.message}")
                 setLoading(false)
@@ -65,14 +67,14 @@ class TaskViewModel : ViewModel() {
         }
     }
 
-    fun addTask(name: String, deadline: String, assigneeId: Int, houseShareId: Int) {
+    fun addTask(name: String, assigneeId: Int, houseShareId: Int) {
         setLoading(true)
         viewModelScope.launch {
-            val result =
-                runCatching { TasksService.addTask(name, deadline, assigneeId, houseShareId) }
+            val result = runCatching { TasksService.addTask(name, assigneeId, houseShareId) }
             result.onSuccess { newTask ->
                 setTasks(_uiState.value.tasks + newTask)
                 setLoading(false)
+                setError(null)
             }.onFailure { exception ->
                 setError("Failed to add task: ${exception.message}")
                 setLoading(false)
@@ -80,16 +82,12 @@ class TaskViewModel : ViewModel() {
         }
     }
 
-    fun editTask(taskId: Int, name: String, deadline: String, assigneeId: Int, houseShareId: Int) {
+    fun editTask(taskId: Int, name: String, assigneeId: Int, houseShareId: Int, done: Boolean) {
         setLoading(true)
         viewModelScope.launch {
             val result = runCatching {
                 TasksService.editTask(
-                    taskId,
-                    name,
-                    deadline,
-                    assigneeId,
-                    houseShareId
+                    taskId, name, assigneeId, houseShareId, done
                 )
             }
             result.onSuccess { updatedTask ->
@@ -98,6 +96,7 @@ class TaskViewModel : ViewModel() {
                 }
                 setTasks(updatedList)
                 setLoading(false)
+                setError(null)
             }.onFailure { exception ->
                 setError("Failed to edit task: ${exception.message}")
                 setLoading(false)
@@ -112,6 +111,7 @@ class TaskViewModel : ViewModel() {
             result.onSuccess {
                 setTasks(_uiState.value.tasks.filter { it.id != taskId })
                 setLoading(false)
+                setError(null)
             }.onFailure { exception ->
                 setError("Failed to delete task: ${exception.message}")
                 setLoading(false)
@@ -122,12 +122,7 @@ class TaskViewModel : ViewModel() {
     fun selectTask(taskId: Int) {
         val selectedTask = _uiState.value.tasks.find { it.id == taskId }
         _uiState.value = _uiState.value.copy(
-            selectedTaskId = taskId,
-            selectedTask = selectedTask
+            selectedTaskId = taskId, selectedTask = selectedTask
         )
-    }
-
-    fun clearError() {
-        setError(null)
     }
 }

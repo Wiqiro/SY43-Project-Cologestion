@@ -55,8 +55,8 @@ class Token(BaseModel):
 
 class TaskBase(BaseModel):
     name: str
-    deadline: int
-    done: bool
+    deadline: Optional[int] = None
+    done: bool = False
     assignee_id: int
     house_share_id: int
 

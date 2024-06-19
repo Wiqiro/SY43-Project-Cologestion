@@ -45,11 +45,6 @@ class UserViewModel : ViewModel() {
         _uiState.value = _uiState.value.copy(isLoggedIn = loggedIn)
     }
 
-    fun initialize(context: Context) {
-        AuthService.initialize(context)
-        //setLoggedIn(AuthService.loggedIn.value)
-    }
-
     fun login(email: String, password: String) {
         setLoading(true)
         viewModelScope.launch {

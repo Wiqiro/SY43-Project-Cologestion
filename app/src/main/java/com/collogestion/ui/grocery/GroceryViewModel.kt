@@ -44,6 +44,7 @@ class GroceryViewModel : ViewModel() {
             result.onSuccess { groceryLists ->
                 setGroceryLists(groceryLists)
                 setLoading(false)
+                setError(null)
             }.onFailure { exception ->
                 setError("Failed to load user grocery lists: ${exception.message}")
                 setLoading(false)
@@ -58,6 +59,7 @@ class GroceryViewModel : ViewModel() {
             result.onSuccess { groceryLists ->
                 setGroceryLists(groceryLists)
                 setLoading(false)
+                setError(null)
             }.onFailure { exception ->
                 setError("Failed to load house share grocery lists: ${exception.message}")
                 setLoading(false)
@@ -73,6 +75,7 @@ class GroceryViewModel : ViewModel() {
             result.onSuccess { newGroceryList ->
                 setGroceryLists(_uiState.value.groceryLists + newGroceryList)
                 setLoading(false)
+                setError(null)
             }.onFailure { exception ->
                 setError("Failed to add grocery list: ${exception.message}")
                 setLoading(false)
@@ -101,6 +104,7 @@ class GroceryViewModel : ViewModel() {
                 }
                 setGroceryLists(updatedList)
                 setLoading(false)
+                setError(null)
             }.onFailure { exception ->
                 setError("Failed to add grocery item: ${exception.message}")
                 setLoading(false)
@@ -123,6 +127,10 @@ class GroceryViewModel : ViewModel() {
                     )
                 }
                 setGroceryLists(updatedList)
+                setLoading(false)
+                setError(null)
+            }.onFailure { exception ->
+                setError("Failed to delete grocery item: ${exception.message}")
                 setLoading(false)
             }
         }
@@ -150,6 +158,7 @@ class GroceryViewModel : ViewModel() {
                 }
                 setGroceryLists(updatedList)
                 setLoading(false)
+                setError(null)
             }.onFailure { exception ->
                 setError("Failed to edit grocery list: ${exception.message}")
                 setLoading(false)
@@ -164,6 +173,7 @@ class GroceryViewModel : ViewModel() {
             result.onSuccess {
                 setGroceryLists(_uiState.value.groceryLists.filter { it.id != groceryListId })
                 setLoading(false)
+                setError(null)
             }.onFailure { exception ->
                 setError("Failed to delete grocery list: ${exception.message}")
                 setLoading(false)
@@ -177,9 +187,5 @@ class GroceryViewModel : ViewModel() {
         _uiState.value = _uiState.value.copy(
             selectedGroceryList = selectedGroceryList
         )
-    }
-
-    fun clearError() {
-        setError(null)
     }
 }

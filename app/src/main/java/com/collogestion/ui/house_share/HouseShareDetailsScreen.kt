@@ -83,7 +83,7 @@ fun HouseShareDetailsScreen(
             style = TextStyle(color = Color.White, fontSize = 30.sp)
         )
         GroceryListCard(navController, groceryUiState.groceryLists)
-        TaskCard(taskUiState.tasks)
+        TaskCard(navController, houseShareId, taskUiState.tasks, taskViewModel)
         EventCard(navController, houseShareId, eventUiState.events, eventViewModel)
         DueCard(navController, houseShareId, dueUiState.dues, dueViewModel)
     }

@@ -75,15 +75,6 @@ fun DueCard(
         }
         dues.forEach { item -> DueItem(item, dueViewModel) }
         Spacer(modifier = Modifier.height(15.dp))
-        Text(
-            text = "My total spending = 35€",
-            style = TextStyle(color = Color.White, fontSize = 20.sp)
-        )
-        Spacer(modifier = Modifier.height(5.dp))
-        Text(
-            text = "Total spending by the project= 100€",
-            style = TextStyle(color = Color.White, fontSize = 20.sp)
-        )
 
     }
 }

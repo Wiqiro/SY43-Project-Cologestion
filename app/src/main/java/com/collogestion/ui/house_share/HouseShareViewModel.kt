@@ -43,6 +43,7 @@ class HouseShareViewModel : ViewModel() {
             result.onSuccess { houseShare ->
                 setSelectedHouseShare(houseShare)
                 setLoading(false)
+                setError(null)
             }.onFailure { exception ->
                 setError("Failed to load house share: ${exception.message}")
                 setLoading(false)
@@ -57,6 +58,7 @@ class HouseShareViewModel : ViewModel() {
             result.onSuccess { houseShares ->
                 setHouseShares(houseShares)
                 setLoading(false)
+                setError(null)
             }.onFailure { exception ->
                 setError("Failed to load user's house shares: ${exception.message}")
                 setLoading(false)
@@ -71,6 +73,7 @@ class HouseShareViewModel : ViewModel() {
             result.onSuccess { newHouseShare ->
                 setHouseShares(_uiState.value.houseShares + newHouseShare)
                 setLoading(false)
+                setError(null)
             }.onFailure { exception ->
                 setError("Failed to add house share: ${exception.message}")
                 setLoading(false)
@@ -89,6 +92,7 @@ class HouseShareViewModel : ViewModel() {
                 }
                 setHouseShares(updatedList)
                 setLoading(false)
+                setError(null)
             }.onFailure { exception ->
                 setError("Failed to edit house share: ${exception.message}")
                 setLoading(false)
@@ -103,14 +107,11 @@ class HouseShareViewModel : ViewModel() {
             result.onSuccess {
                 setHouseShares(_uiState.value.houseShares.filter { it.id != houseShareId })
                 setLoading(false)
+                setError(null)
             }.onFailure { exception ->
                 setError("Failed to delete house share: ${exception.message}")
                 setLoading(false)
             }
         }
-    }
-
-    fun clearError() {
-        setError(null)
     }
 }

@@ -12,15 +12,21 @@ import okhttp3.FormBody
 object AuthService {
     private lateinit var sharedPreferences: SharedPreferences
     private var _loggedIn = MutableStateFlow(false)
+    private var _apiReachable = MutableStateFlow(false)
 
 
-    fun initialize(context: Context) {
+    suspend fun initialize(context: Context) {
         sharedPreferences = context.getSharedPreferences("MyPrefs", Context.MODE_PRIVATE)
 
-        val token = getToken()
-        if (token != null) {
-            HttpClient.setToken(token)
-            _loggedIn.value = true
+        if (HttpClient.isApiReachable()) {
+            val token = getToken()
+            _apiReachable.value = true
+            if (token != null) {
+                HttpClient.setToken(token)
+                _loggedIn.value = true
+            }
+        } else {
+            _apiReachable.value = false
         }
     }
 
@@ -28,6 +34,8 @@ object AuthService {
 
     val isLoggedIn: Boolean
         get() = _loggedIn.value
+
+    val apiReachable: Flow<Boolean> = _apiReachable
 
     suspend fun login(email: String, password: String) {
         return withContext(Dispatchers.IO) {

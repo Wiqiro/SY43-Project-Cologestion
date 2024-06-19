@@ -1,5 +1,6 @@
 package com.collogestion.ui.task
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Checkbox
@@ -31,14 +33,26 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.collogestion.data.Task
 
 @Composable
-fun TaskCard(tasks: List<Task>) {
+fun TaskCard(
+    navController: NavController? = null,
+    houseShareId: Int? = null,
+    tasks: List<Task>,
+    taskViewModel: TaskViewModel = TaskViewModel()
+) {
+    var hideDone by remember { mutableStateOf(true) }
+    var filteredTasks = tasks
+    if (hideDone) {
+        filteredTasks = tasks.filter { !it.done }
+    }
+
+
     Spacer(modifier = Modifier.height(15.dp))
     Column(
-        modifier =
-        Modifier
+        modifier = Modifier
             .width((LocalConfiguration.current.screenWidthDp * 0.85).dp)
             .clip(shape = RoundedCornerShape(10.dp))
             .background(color = Color(0xFF211F26))
@@ -49,33 +63,54 @@ fun TaskCard(tasks: List<Task>) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween,
-            modifier = Modifier.fillMaxWidth()
-                .padding(start = 15.dp, end = 15.dp)) {
-            Text(text = "Tasks", style = TextStyle(color = Color.White, fontSize = 25.sp))
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(start = 15.dp, end = 15.dp)
+        ) {
+            Text(
+                text = "Tasks",
+                style = TextStyle(color = Color.White, fontSize = 25.sp),
+                modifier = Modifier.weight(1f)
+            )
             Button(
-                onClick = { /*TODO*/ },
-                colors = ButtonDefaults.buttonColors(
-                    containerColor = Color.Transparent,
-                    contentColor = Color.White
-                ),
-                modifier = Modifier.background(color = Color.Transparent)
+                onClick = {
+                    hideDone = !hideDone
+                    Log.w("UWU", "Hide done tasks: $hideDone  ${filteredTasks}")
+                }, colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.Transparent, contentColor = Color.White
+                ), modifier = Modifier.background(color = Color.Transparent)
             ) {
                 Icon(
-                    Icons.Filled.Add,
+                    Icons.Filled.Check,
                     contentDescription = "Add button",
                     tint = Color.White,
                     modifier = Modifier.background(color = Color.Transparent)
                 )
             }
+            if (navController != null && houseShareId != null) {
+                Button(
+                    onClick = { navController.navigate("house_share_details/add_task") },
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = Color.Transparent, contentColor = Color.White
+                    ),
+                    modifier = Modifier.background(color = Color.Transparent)
+                ) {
+                    Icon(
+                        Icons.Filled.Add,
+                        contentDescription = "Add button",
+                        tint = Color.White,
+                        modifier = Modifier.background(color = Color.Transparent)
+                    )
+                }
+            }
         }
-        tasks.forEach { item -> TaskItem(item) }
+        filteredTasks.forEach { item -> TaskItem(item, taskViewModel) }
 
     }
 }
 
 @Composable
-fun TaskItem(item: Task) {
-    var checkedState by remember { mutableStateOf(item.done) }
+fun TaskItem(item: Task, taskViewModel: TaskViewModel = TaskViewModel()) {
     Spacer(modifier = Modifier.height(15.dp))
     Row(
         modifier = Modifier
@@ -93,10 +128,10 @@ fun TaskItem(item: Task) {
                 .padding(end = 8.dp)
         )
         Checkbox(
-            checked = checkedState,
-            onCheckedChange = { checkedState = it },
-            modifier = Modifier.padding(end = 8.dp),
-            colors = CheckboxDefaults.colors(
+            checked = item.done, onCheckedChange = {
+                taskViewModel.editTask(item.id, item.name, item.assignee, item.houseShareId, !item.done)
+
+            }, modifier = Modifier.padding(end = 8.dp), colors = CheckboxDefaults.colors(
                 checkedColor = Color.Blue, uncheckedColor = Color.Red
             )
         )

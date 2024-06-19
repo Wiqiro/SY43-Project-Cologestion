@@ -40,6 +40,7 @@ class DueViewModel : ViewModel() {
             result.onSuccess { dues ->
                 setDues(dues)
                 setLoading(false)
+                setError(null)
             }.onFailure { exception ->
                 setError("Failed to load house share dues: ${exception.message}")
                 setLoading(false)
@@ -54,6 +55,7 @@ class DueViewModel : ViewModel() {
             result.onSuccess { dues ->
                 setDues(dues)
                 setLoading(false)
+                setError(null)
             }.onFailure { exception ->
                 setError("Failed to load user dues: ${exception.message}")
                 setLoading(false)
@@ -77,6 +79,7 @@ class DueViewModel : ViewModel() {
             result.onSuccess { newDue ->
                 setDues(_uiState.value.dues + newDue)
                 setLoading(false)
+                setError(null)
             }.onFailure { exception ->
                 setError("Failed to add due: ${exception.message}")
                 setLoading(false)
@@ -102,6 +105,7 @@ class DueViewModel : ViewModel() {
                 }
                 setDues(updatedList)
                 setLoading(false)
+                setError(null)
             }.onFailure { exception ->
                 setError("Failed to edit due: ${exception.message}")
                 setLoading(false)
@@ -116,6 +120,7 @@ class DueViewModel : ViewModel() {
             result.onSuccess {
                 setDues(_uiState.value.dues.filter { it.id != dueId })
                 setLoading(false)
+                setError(null)
             }.onFailure { exception ->
                 setError("Failed to delete due: ${exception.message}")
                 setLoading(false)
@@ -128,9 +133,5 @@ class DueViewModel : ViewModel() {
         _uiState.value = _uiState.value.copy(
             selectedDueId = dueId,
         )
-    }
-
-    fun clearError() {
-        setError(null)
     }
 }

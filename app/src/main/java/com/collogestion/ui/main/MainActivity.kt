@@ -1,8 +1,11 @@
 package com.collogestion.ui.main
 
+import android.content.Context
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -11,6 +14,7 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.material.icons.outlined.Menu
 import androidx.compose.material.icons.outlined.Person
+import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
@@ -24,10 +28,15 @@ import androidx.compose.material3.TopAppBarDefaults
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -44,29 +53,71 @@ import com.collogestion.ui.grocery.GroceryViewModel
 import com.collogestion.ui.house_share.HouseShareDetailsScreen
 import com.collogestion.ui.house_share.HouseShareListScreen
 import com.collogestion.ui.house_share.HouseShareViewModel
+import com.collogestion.ui.task.TaskFormScreen
 import com.collogestion.ui.task.TaskViewModel
 import com.collogestion.ui.theme.ColloGestionTheme
 import com.collogestion.ui.user.LoginScreen
 import com.collogestion.ui.user.PersonalDashboardScreen
 import com.collogestion.ui.user.ProfileScreen
 import com.collogestion.ui.user.UserViewModel
+import kotlinx.coroutines.launch
 
 
 class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        AuthService.initialize(this)
+
+        lifecycleScope.launch {
+            AuthService.initialize(this@MainActivity)
+        }
 
         setContent {
             ColloGestionTheme {
                 val isLoggedIn by AuthService.loggedIn.collectAsState(initial = false)
+                val apiReachable by AuthService.apiReachable.collectAsState(initial = true)
 
                 if (isLoggedIn) {
                     LoggedInContent()
-                } else {
+                } else if (apiReachable) {
                     LoginScreen()
+                } else {
+                    ApiErrorScreen(this@MainActivity)
                 }
+            }
+        }
+    }
+}
+
+@Composable
+fun ApiErrorScreen(context: Context) {
+    val lifecycleScope = LocalLifecycleOwner.current.lifecycleScope
+
+    Scaffold(
+        Modifier
+            .fillMaxSize(), containerColor = Color.Black
+    ) { innerPadding ->
+        Column(
+            Modifier
+                .padding(innerPadding)
+                .padding(20.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.SpaceAround
+        ) {
+            Text(
+                "An error occurred while trying to connect to the server.",
+                style = TextStyle(
+                    color = Color.White,
+                    fontSize = 20.sp,
+                    textAlign = TextAlign.Center
+                )
+            )
+            Button(onClick = {
+                lifecycleScope.launch {
+                    AuthService.initialize(context)
+                }
+            }) {
+                Text("Retry")
             }
         }
     }
@@ -231,6 +282,9 @@ fun LoggedInContent() {
             }
             composable("house_share_details/add_grocery") {
                 GroceryListFormScreen(navController, houseShareViewModel, groceryViewModel)
+            }
+            composable("house_share_details/add_task") {
+                TaskFormScreen(navController, houseShareViewModel, taskViewModel)
             }
 
         }

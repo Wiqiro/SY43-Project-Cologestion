@@ -14,11 +14,10 @@ object TasksService {
     }
 
     suspend fun addTask(
-        name: String, deadline: String, assigneeId: Int, houseShareId: Int
+        name: String, assigneeId: Int, houseShareId: Int
     ): Task {
         val data = mapOf(
             "name" to name,
-            "deadline" to deadline,
             "assignee_id" to assigneeId,
             "house_share_id" to houseShareId
         )
@@ -30,15 +29,14 @@ object TasksService {
     suspend fun editTask(
         taskId: Int,
         name: String,
-        deadline: String,
         assigneeId: Int,
-        houseShareId: Int
+        houseShareId: Int, done: Boolean
     ): Task {
         val data = mapOf(
             "name" to name,
-            "deadline" to deadline,
             "assignee_id" to assigneeId,
-            "house_share_id" to houseShareId
+            "house_share_id" to houseShareId,
+            "done" to done
         )
 
         val response = HttpClient.putRequest("/tasks/$taskId", data)

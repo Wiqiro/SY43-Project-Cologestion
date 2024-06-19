@@ -44,7 +44,7 @@ fun LoginScreen() {
     ) { innerPadding ->
         Column(
             modifier = Modifier
-                .padding(innerPadding)
+                .padding(innerPadding).padding(20.dp)
         ) {
             if (isLogin) {
                 LoginForm()
@@ -53,7 +53,7 @@ fun LoginScreen() {
             }
             Spacer(modifier = Modifier.height(15.dp))
             Button(onClick = { isLogin = !isLogin }) {
-                Text(if (isLogin) "I dont have an account" else "I already have an account")
+                Text(if (isLogin) "I don't have an account" else "I already have an account")
             }
         }
     }
