@@ -61,7 +61,32 @@ def add_house_share(
         db.add(new_house_share)
         db.commit()
         db.refresh(new_house_share)
+
+        house_share_member = models.HouseShareMember(
+            house_share_id=new_house_share.id, user_id=current_user_id
+        )
+        db.add(house_share_member)
+        db.commit()
         return new_house_share
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/{house_share_id}/members", response_model=schemas.Success)
+def add_house_share_member(
+    house_share_id: int,
+    new_member: schemas.HouseShareNewMember,
+    db: Session = Depends(get_db),
+    current_user_id: int = Depends(get_current_user),
+):
+    try:
+        user = db.query(models.User).filter_by(email=new_member.email).one_or_none()
+        house_share_member = models.HouseShareMember(
+            house_share_id=house_share_id, user_id=user.id
+        )
+        db.add(house_share_member)
+        db.commit()
+        return schemas.Success()
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
@@ -101,5 +126,27 @@ def delete_house_share(
         return house_share
     except NoResultFound:
         raise HTTPException(status_code=404, detail="House share not found")
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.delete("/{house_share_id}/members/{user_id}", response_model=schemas.Success)
+def delete_house_share_member(
+    house_share_id: int,
+    user_id: int,
+    db: Session = Depends(get_db),
+    current_user_id: int = Depends(get_current_user),
+):
+    try:
+        house_share_member = (
+            db.query(models.HouseShareMember)
+            .filter_by(house_share_id=house_share_id, user_id=user_id)
+            .one()
+        )
+        db.delete(house_share_member)
+        db.commit()
+        return schemas.Success(success=True)
+    except NoResultFound:
+        raise HTTPException(status_code=404, detail="House share member not found")
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

@@ -2,7 +2,7 @@ package com.collogestion.data
 
 import com.google.gson.annotations.SerializedName
 
-class Due(
+data class Due(
     @SerializedName("id") var id: Int,
     @SerializedName("title") var title: String,
     @SerializedName("amount") var amount: Double,

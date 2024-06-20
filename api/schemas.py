@@ -43,6 +43,10 @@ class User(UserBase):
         from_attributes = True
 
 
+class HouseShareNewMember(BaseModel):
+    email: str
+
+
 class UserPasswordChange(BaseModel):
     new_password: str
     old_password: str
@@ -142,3 +146,7 @@ class GroceryList(GroceryListBase):
 
     class Config:
         from_attributes = True
+
+
+class Success(BaseModel):
+    success: bool = True

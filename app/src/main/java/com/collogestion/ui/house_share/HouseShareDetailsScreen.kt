@@ -1,10 +1,16 @@
 package com.collogestion.ui.house_share
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Edit
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -78,10 +84,19 @@ fun HouseShareDetailsScreen(
         horizontalAlignment = Alignment.CenterHorizontally
 
     ) {
-        Text(
-            text = houseShare?.name ?: "",
-            style = TextStyle(color = Color.White, fontSize = 30.sp)
-        )
+        Row(
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Text(
+                text = houseShare?.name ?: "",
+                style = TextStyle(color = Color.White, fontSize = 30.sp),
+                modifier = Modifier.padding(10.dp)
+            )
+            IconButton(onClick = { navController.navigate("house_share_details/add") }) {
+                Icon(Icons.Default.Edit, contentDescription = null, tint = Color.White)
+            }
+        }
         GroceryListCard(navController, groceryUiState.groceryLists)
         TaskCard(navController, houseShareId, taskUiState.tasks, taskViewModel)
         EventCard(navController, houseShareId, eventUiState.events, eventViewModel)

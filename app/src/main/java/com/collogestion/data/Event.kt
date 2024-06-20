@@ -3,7 +3,7 @@ package com.collogestion.data
 import com.google.gson.annotations.SerializedName
 import java.util.Date
 
-class Event(
+data class Event(
     @SerializedName("id") var id: Int,
     @SerializedName("date") private var _date: Int,
     @SerializedName("title") var title: String,

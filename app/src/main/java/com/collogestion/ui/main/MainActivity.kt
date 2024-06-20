@@ -51,6 +51,7 @@ import com.collogestion.ui.grocery.GroceryListFormScreen
 import com.collogestion.ui.grocery.GroceryListScreen
 import com.collogestion.ui.grocery.GroceryViewModel
 import com.collogestion.ui.house_share.HouseShareDetailsScreen
+import com.collogestion.ui.house_share.HouseShareFormScreen
 import com.collogestion.ui.house_share.HouseShareListScreen
 import com.collogestion.ui.house_share.HouseShareViewModel
 import com.collogestion.ui.task.TaskFormScreen
@@ -129,6 +130,13 @@ fun ApiErrorScreen(context: Context) {
 fun LoggedInContent() {
     val navController = rememberNavController()
     val currentRoute = navController.currentBackStackEntryAsState().value?.destination?.route
+
+    val houseShareViewModel: HouseShareViewModel = viewModel()
+    val groceryViewModel: GroceryViewModel = viewModel()
+    val taskViewModel: TaskViewModel = viewModel()
+    val eventViewModel: EventViewModel = viewModel()
+    val dueViewModel: DueViewModel = viewModel()
+    val userViewModel: UserViewModel = viewModel()
     Scaffold(
         topBar = {
             TopAppBar(colors = TopAppBarDefaults.topAppBarColors(
@@ -223,7 +231,10 @@ fun LoggedInContent() {
         },
         floatingActionButton = {
             if (currentRoute == "house_share") {
-                FloatingActionButton(onClick = {}) {
+                FloatingActionButton(onClick = {
+                    houseShareViewModel.resetSelectedHouseShare()
+                    navController.navigate("house_share_details/add")
+                }) {
                     Icon(Icons.Default.Add, contentDescription = "Add")
                 }
             }
@@ -231,12 +242,7 @@ fun LoggedInContent() {
         modifier = Modifier.fillMaxSize(),
         containerColor = Color.Black,
     ) { innerPadding ->
-        val houseShareViewModel: HouseShareViewModel = viewModel()
-        val groceryViewModel: GroceryViewModel = viewModel()
-        val taskViewModel: TaskViewModel = viewModel()
-        val eventViewModel: EventViewModel = viewModel()
-        val dueViewModel: DueViewModel = viewModel()
-        val userViewModel: UserViewModel = viewModel()
+
 
         NavHost(
             navController,
@@ -285,6 +291,9 @@ fun LoggedInContent() {
             }
             composable("house_share_details/add_task") {
                 TaskFormScreen(navController, houseShareViewModel, taskViewModel)
+            }
+            composable("house_share_details/add") {
+                HouseShareFormScreen(navController, houseShareViewModel)
             }
 
         }

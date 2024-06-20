@@ -1,6 +1,5 @@
 package com.collogestion.ui.due
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -126,7 +125,6 @@ fun DueFormScreen(
 
         Button(
             onClick = {
-                Log.w("OMG", users.find { it.firstname == creditorInput }?.firstname.toString())
                 dueViewModel.addDue(
                     titleInput,
                     amountInput.toDouble(),
@@ -139,7 +137,6 @@ fun DueFormScreen(
                 } else {
                     navController.navigateUp()
                 }
-                //navController.navigateUp()
 
             }) {
             Row(

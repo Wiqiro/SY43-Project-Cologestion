@@ -66,16 +66,29 @@ class HouseShareViewModel : ViewModel() {
         }
     }
 
-    fun addHouseShare(name: String, imageUrl: String) {
+    fun addHouseShare(name: String) {
         setLoading(true)
         viewModelScope.launch {
-            val result = runCatching { HouseSharesService.addHouseShare(name, imageUrl) }
+            val result = runCatching { HouseSharesService.addHouseShare(name) }
             result.onSuccess { newHouseShare ->
                 setHouseShares(_uiState.value.houseShares + newHouseShare)
                 setLoading(false)
                 setError(null)
             }.onFailure { exception ->
                 setError("Failed to add house share: ${exception.message}")
+                setLoading(false)
+            }
+        }
+    }
+
+    fun addUserToHouseShare(email: String, houseShareId: Int) {
+        setLoading(true)
+        viewModelScope.launch {
+            val result = runCatching { HouseSharesService.addUserToHouseShare(email, houseShareId) }
+            result.onSuccess {
+                loadHouseShare(houseShareId)
+            }.onFailure { exception ->
+                setError("Failed to add user to house share: ${exception.message}")
                 setLoading(false)
             }
         }
@@ -113,5 +126,23 @@ class HouseShareViewModel : ViewModel() {
                 setLoading(false)
             }
         }
+    }
+
+    fun removeUserFromHouseShare(userId: Int, houseShareId: Int) {
+        setLoading(true)
+        viewModelScope.launch {
+            val result =
+                runCatching { HouseSharesService.removeUserFromHouseShare(userId, houseShareId) }
+            result.onSuccess {
+                loadHouseShare(houseShareId)
+            }.onFailure { exception ->
+                setError("Failed to remove user from house share: ${exception.message}")
+                setLoading(false)
+            }
+        }
+    }
+
+    fun resetSelectedHouseShare() {
+        setSelectedHouseShare(null)
     }
 }

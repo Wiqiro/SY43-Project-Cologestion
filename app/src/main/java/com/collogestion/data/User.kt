@@ -2,7 +2,7 @@ package com.collogestion.data
 
 import com.google.gson.annotations.SerializedName
 
-class User(
+data class User(
     @SerializedName("id") var id: Int,
     @SerializedName("first_name") var firstname: String,
     @SerializedName("last_name") var lastname: String,
