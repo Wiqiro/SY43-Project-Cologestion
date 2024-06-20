@@ -22,7 +22,7 @@ cd api
 pip install -r requirements.txt
 ```
 
-Rename `.env.example` to `.env` and replace the values with your own.
+Rename `.env.example` to `.env` and replace the values with your own (database url and token secret)
 
 ## Running the app
 
