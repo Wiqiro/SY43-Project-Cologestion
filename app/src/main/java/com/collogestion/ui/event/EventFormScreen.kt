@@ -1,6 +1,5 @@
 package com.collogestion.ui.event
 
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -46,8 +45,14 @@ fun EventFormScreen(
 
     val eventUiState = eventViewModel.uiState.collectAsState()
 
-    var titleInput by remember { mutableStateOf("") }
-    var durationInput by remember { mutableStateOf("") }
+    val update = eventUiState.value.selectedEvent != null
+
+    var titleInput by remember { mutableStateOf(eventUiState.value.selectedEvent?.title ?: "") }
+    var durationInput by remember {
+        mutableStateOf(
+            eventUiState.value.selectedEvent?.duration.toString() ?: ""
+        )
+    }
     var dateInput by remember { mutableStateOf(LocalDateTime.now()) }
 
 
@@ -82,10 +87,7 @@ fun EventFormScreen(
                 }
             })
 
-        DateTimePickerField(
-            selectedDateTime = dateInput,
-            onDateTimeSelected = { dateInput = it }
-        )
+        DateTimePickerField(selectedDateTime = dateInput, onDateTimeSelected = { dateInput = it })
 
         BasicTextField(value = durationInput,
             onValueChange = { durationInput = it },
@@ -118,23 +120,31 @@ fun EventFormScreen(
         }
         Spacer(modifier = Modifier.height(16.dp))
 
-        Button(
-            onClick = {
-                val date = Date.from(
-                    dateInput.atZone(ZoneId.systemDefault()).toInstant()
+        Button(onClick = {
+            val date = Date.from(
+                dateInput.atZone(ZoneId.systemDefault()).toInstant()
+            )
+            if (update) {
+                eventViewModel.editEvent(
+                    eventUiState.value.selectedEvent!!.id,
+                    date, titleInput, durationInput.toInt(),
+                    houseShareUiState.selectedHouseShare!!.id
                 )
-                Log.d("EventFormScreen", date.time.toString())
+            } else {
                 eventViewModel.addEvent(
                     date,
                     titleInput,
                     durationInput.toInt(),
                     houseShareUiState.selectedHouseShare!!.id
                 )
+            }
+            if (eventUiState.value.errorMessage == null) {
+                navController.navigateUp()
+            }
 
-            }) {
+        }) {
             Row(
-                horizontalArrangement = Arrangement.Center,
-                modifier = Modifier.fillMaxWidth()
+                horizontalArrangement = Arrangement.Center, modifier = Modifier.fillMaxWidth()
             ) {
                 Text("Submit")
             }

@@ -116,4 +116,11 @@ class EventViewModel : ViewModel() {
             selectedEvent = selectedEvent
         )
     }
+
+    fun clearSelectedEvent() {
+        _uiState.value = _uiState.value.copy(
+            selectedEventId = null,
+            selectedEvent = null
+        )
+    }
 }

@@ -30,20 +30,18 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import com.collogestion.data.Event
 import java.text.SimpleDateFormat
-import java.util.Date
 import java.util.Locale
 
 @Composable
 fun EventCard(
-    navController: NavController? = null,
-    houseShareId: Int? = null,
+    navController: NavController,
+    houseShareId: Int,
     events: List<Event>,
     eventViewModel: EventViewModel = viewModel()
 ) {
     Spacer(modifier = Modifier.height(15.dp))
     Column(
-        modifier =
-        Modifier
+        modifier = Modifier
             .width((LocalConfiguration.current.screenWidthDp * 0.85).dp)
             .clip(shape = RoundedCornerShape(10.dp))
             .background(color = Color(0xFF211F26))
@@ -59,31 +57,33 @@ fun EventCard(
                 .padding(start = 15.dp, end = 15.dp)
         ) {
             Text(text = "Events", style = TextStyle(color = Color.White, fontSize = 25.sp))
-            if (navController != null && houseShareId != null) {
-                Button(
-                    onClick = { navController.navigate("house_share_details/add_event") },
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.Transparent,
-                        contentColor = Color.White
-                    ),
+            Button(
+                onClick = {
+                    eventViewModel.clearSelectedEvent()
+                    navController.navigate("house_share_details/add_event")
+                }, colors = ButtonDefaults.buttonColors(
+                    containerColor = Color.Transparent, contentColor = Color.White
+                ), modifier = Modifier.background(color = Color.Transparent)
+            ) {
+                Icon(
+                    Icons.Filled.Add,
+                    contentDescription = "Add button",
+                    tint = Color.White,
                     modifier = Modifier.background(color = Color.Transparent)
-                ) {
-                    Icon(
-                        Icons.Filled.Add,
-                        contentDescription = "Add button",
-                        tint = Color.White,
-                        modifier = Modifier.background(color = Color.Transparent)
-                    )
-                }
+                )
+
             }
         }
-        events.forEach { item -> EventItem(item) }
+        events.forEach { item -> EventItem(navController, item, eventViewModel) }
 
     }
 }
 
 @Composable
-fun EventItem(item: Event) {
+fun EventItem(
+    navController: NavController,
+    item: Event, eventViewModel: EventViewModel = viewModel(),
+) {
     val sdf = SimpleDateFormat("dd-MM-yy HH:mm", Locale.getDefault())
     val formattedDate = sdf.format(item.date)
 
@@ -104,12 +104,12 @@ fun EventItem(item: Event) {
                 .padding(end = 8.dp)
         )
         Button(
-            onClick = { /*TODO*/ },
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color.Transparent,
-                contentColor = Color.White
-            ),
-            modifier = Modifier.background(color = Color.Transparent)
+            onClick = {
+                eventViewModel.selectEvent(item.id)
+                navController.navigate("house_share_details/add_event")
+            }, colors = ButtonDefaults.buttonColors(
+                containerColor = Color.Transparent, contentColor = Color.White
+            ), modifier = Modifier.background(color = Color.Transparent)
         ) {
             Icon(
                 Icons.Filled.Edit,
@@ -119,4 +119,5 @@ fun EventItem(item: Event) {
             )
         }
     }
+
 }

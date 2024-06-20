@@ -2,7 +2,6 @@ package com.collogestion.network
 
 import android.util.Log
 import com.collogestion.data.Event
-import java.time.LocalDateTime
 import java.util.Date
 
 object EventsService {
@@ -33,7 +32,7 @@ object EventsService {
         houseShareId: Int
     ): Event {
         val body = mapOf(
-            "date" to date,
+            "date" to date.time / 1000,
             "title" to title,
             "duration" to duration,
             "house_share_id" to houseShareId
