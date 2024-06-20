@@ -26,9 +26,12 @@ Rename `.env.example` to `.env` and replace the values with your own (database u
 
 ## Running the app
 
-Run the API using uvicorn:
+1. Run your database
+
+2. Run the API using uvicorn:
 ```
 uvicorn main:app --reload
 ```
+If you are using windows, you may have to add uvicorn to the path.
 
-Run the app from Android Studio
+3. Run the app from Android Studio
